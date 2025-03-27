@@ -7,6 +7,7 @@ import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
+import Image from '@/components/Image' // Import Image component
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
 
@@ -127,13 +128,29 @@ export default function ListLayoutWithTags({
           <div>
             <ul>
               {displayPosts.map((post) => {
-                const { path, date, title, summary, tags } = post
+                const { path, date, title, summary, tags, thumbnail } = post // Destructure thumbnail
                 return (
                   <li key={path} className="py-5">
-                    <article className="flex flex-col space-y-2 xl:space-y-0">
-                      <dl>
-                        <dt className="sr-only">Published on</dt>
-                        <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                    {/* Use flexbox for layout */}
+                    <article className="flex flex-col space-y-2 xl:flex-row xl:space-x-6 xl:space-y-0">
+                      {/* Conditionally render thumbnail */}
+                      {thumbnail && (
+                        <div className="flex-shrink-0 xl:w-40">
+                          <Link href={`/${path}`} aria-label={`Link to ${title}`}>
+                            <Image
+                              src={thumbnail}
+                              alt="" // Alt text can be improved if descriptions are available
+                              width={160} // Example width
+                              height={90} // Example height based on 16:9 aspect ratio
+                              className="object-cover rounded-md"
+                            />
+                          </Link>
+                        </div>
+                      )}
+                      <div className="flex-grow space-y-3"> {/* Wrap text content */}
+                        <dl>
+                          <dt className="sr-only">Published on</dt>
+                          <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
                           <time dateTime={date} suppressHydrationWarning>
                             {formatDate(date, siteMetadata.locale)}
                           </time>
@@ -150,10 +167,11 @@ export default function ListLayoutWithTags({
                             {tags?.map((tag) => <Tag key={tag} text={tag} />)}
                           </div>
                         </div>
-                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                          {summary}
+                          <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                            {summary}
+                          </div>
                         </div>
-                      </div>
+                      </div> {/* Close flex-grow div */}
                     </article>
                   </li>
                 )
