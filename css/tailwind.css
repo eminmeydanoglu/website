@@ -7,8 +7,12 @@
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace; /* Default to Mono */
+  --font-inter: var(--font-inter), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; /* Keep Inter available */
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace; /* Keep Mono available */
 
   /* Colors */
   /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
@@ -80,6 +84,7 @@
 
 @layer utilities {
   .prose {
+    font-family: var(--font-inter); /* Apply Inter to all prose content */
     & a {
       color: var(--color-primary-500);
       &:hover {
@@ -89,11 +94,14 @@
         color: var(--color-primary-400);
       }
     }
-    & :where(h1, h2) {
+    /* Remove specific header overrides within prose, they will now inherit Inter */
+    & :where(h1, h2, h3) {
+      /* font-family: var(--font-mono); */ /* Removed */
       font-weight: 700;
       letter-spacing: var(--tracking-tight);
     }
-    & h3 {
+    & :where(h4, h5, h6) {
+      /* font-family: var(--font-mono); */ /* Removed */
       font-weight: 600;
     }
     & :where(code):not(pre code) {
