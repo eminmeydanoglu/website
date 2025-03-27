@@ -22,12 +22,9 @@ export default function Home({ posts }) {
 
         {/* ✍️ Latest Writings Section */}
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h2 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            My Latest Writings
+          <h2 className="text-center text-2xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-3xl sm:leading-10 md:text-4xl md:leading-14 dark:text-gray-100">
+            my latest writings
           </h2>
-          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            {siteMetadata.description}
-          </p>
         </div>
 
         {/* 📝 Posts List */}
