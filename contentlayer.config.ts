@@ -148,9 +148,21 @@ export const Authors = defineDocumentType(() => ({
   computedFields,
 }))
 
+export const MainIntro = defineDocumentType(() => ({
+  name: 'MainIntro',
+  filePathPattern: 'main-intro.md', // Target the specific file
+  contentType: 'mdx',
+  fields: {
+    // No extra fields needed for this simple case
+  },
+  computedFields: {
+    // Add slug or other computed fields if needed later
+  },
+}))
+
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
+  documentTypes: [Blog, Authors, MainIntro], // Add MainIntro here
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
