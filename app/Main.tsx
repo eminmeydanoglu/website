@@ -3,21 +3,21 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
+import { allMainIntros } from 'contentlayer/generated' // Import the new content
+import { MDXLayoutRenderer } from 'pliny/mdx-components' // Import the MDX renderer
 
 const MAX_DISPLAY = 5
 
 export default function Home({ posts }) {
+  const mainIntro = allMainIntros[0] // Get the main intro content
+
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        {/* 👋 Introduction Section */}
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
-            Welcome to My Blog
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            I'm glad you're here. On this blog, I share ideas, thoughts, and insights about things I find fascinating — from tech and creativity to deeper reflections. Feel free to explore!
-          </p>
+        {/* 👋 Introduction Section - Now from Markdown */}
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5 prose dark:prose-invert max-w-none">
+          {/* Render the MDX content */}
+          <MDXLayoutRenderer code={mainIntro.body.code} />
         </div>
 
         {/* ✍️ Latest Writings Section */}
