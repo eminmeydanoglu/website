@@ -10,14 +10,27 @@ export default function Home({ posts }) {
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        {/* 👋 Introduction Section */}
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            Latest
+          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
+            Welcome to My Blog
           </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            I'm glad you're here. On this blog, I share ideas, thoughts, and insights about things I find fascinating — from tech and creativity to deeper reflections. Feel free to explore!
+          </p>
+        </div>
+
+        {/* ✍️ Latest Writings Section */}
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+          <h2 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+            My Latest Writings
+          </h2>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
             {siteMetadata.description}
           </p>
         </div>
+
+        {/* 📝 Posts List */}
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
@@ -70,6 +83,8 @@ export default function Home({ posts }) {
           })}
         </ul>
       </div>
+
+      {/* 📚 View All Posts */}
       {posts.length > MAX_DISPLAY && (
         <div className="flex justify-end text-base leading-6 font-medium">
           <Link
@@ -81,6 +96,8 @@ export default function Home({ posts }) {
           </Link>
         </div>
       )}
+
+      {/* 📨 Newsletter */}
       {siteMetadata.newsletter?.provider && (
         <div className="flex items-center justify-center pt-4">
           <NewsletterForm />
