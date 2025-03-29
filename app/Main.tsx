@@ -15,7 +15,7 @@ export default function Home({ posts }) {
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {/* 👋 Introduction Section - Now from Markdown */}
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5 prose dark:prose-invert max-w-none">
+        <div className="prose dark:prose-invert max-w-none space-y-2 pt-6 pb-8 md:space-y-5">
           {/* Render the MDX content */}
           <MDXLayoutRenderer code={mainIntro.body.code} />
         </div>
