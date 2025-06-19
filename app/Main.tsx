@@ -3,21 +3,24 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
-import { allMainIntros } from 'contentlayer/generated' // Import the new content
-import { MDXLayoutRenderer } from 'pliny/mdx-components' // Import the MDX renderer
+import { Authors, allAuthors } from 'contentlayer/generated'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
+import AuthorLayout from '@/layouts/AuthorLayout'
+import { coreContent } from 'pliny/utils/contentlayer'
 
 const MAX_DISPLAY = 5
 
 export default function Home({ posts }) {
-  const mainIntro = allMainIntros[0] // Get the main intro content
+  const author = allAuthors.find((p) => p.slug === 'default') as Authors
+  const mainContent = coreContent(author)
 
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        {/* 👋 Introduction Section - Now from Markdown */}
-        <div className="prose dark:prose-invert max-w-none space-y-2 pt-6 pb-8 md:space-y-5">
-          {/* Render the MDX content */}
-          <MDXLayoutRenderer code={mainIntro.body.code} />
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+          <AuthorLayout content={mainContent}>
+            <MDXLayoutRenderer code={author.body.code} />
+          </AuthorLayout>
         </div>
 
         {/* ✍️ Latest Writings Section */}
