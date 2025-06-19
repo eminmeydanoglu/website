@@ -1,0 +1,46 @@
+---
+title: "Bayesçi Düşünme Metodu: Nasıl daha iyi düşünebiliriz?"
+date: '2025-06-19'
+tags: ['düşünme', 'olasılık', 'felsefe', 'bilim']
+draft: false
+summary: Belirsizliklerle dolu bir dünyada daha iyi karar almak için.
+thumbnail: '/static/images/Thomas-Bayes-1701-1761.png' # Added thumbnail
+---
+
+> **"Hayatta hiçbir şeyden tam anlamıyla emin olamayız. Hakikat, belirsizliklerin içinde saklıdır. Biz insanlar, yalnızca ipuçlarıyla ve olasılıklarla dolu bir dünyada geziniriz. Ancak bu belirsizlikler, öğrenme ve gelişme yolunda tek şansımızdır."** - **Albert Einstein (dolaylı)**
+> 
+
+> **"Bir düşünceye dört elle sarılmak, onu mutlak gerçek olarak kabul etmek, insana huzurdan çok korku getirir. Çünkü düşünceye bağlılık, onu sorgulama yeteneğimizi köreltir. Gerçek bilgelik, her zaman şüphe duymakta ve bu şüpheyi beslemekte yatar."** - **Friedrich Nietzsche (dolaylı)**
+> 
+
+### Giriş
+
+İnsanlar genellikle kesin yargılara varmaya ve ilk kanılarına güvenmeye eğilimlidirler. Ancak, gerçek dünya nadiren bu kadar net ve kesindir. Birçok durumun açıklaması bizim sınırlı anlayışımızın ötesindedir ve birisi bir konu hakkında %100 emin olduğunu iddia ediyorsa, büyük olasılıkla yanılıyor demektir. İşte olasılıkçı düşünme, bu belirsizliklerin farkında olmayı ve olasılıklar üzerinden düşünmeyi teşvik eder. Yani, bir şeyin doğruluğunu değerlendirirken sadece birkaç olguya değil, aynı zamanda geçmiş deneyimlere, bizim inancımızın aksini gösteren delillere ve diğer ilgili bilgilere de bakmak gerekir. Bu yaklaşım, kararlarımızı daha esnek ve gerçeğe daha uygun hale getirir.
+
+Bunun yanı sıra, Thomas Bayes tarafından geliştirilen Bayes teoremine dayanan bir düşünme yöntemi olan Bayesçi düşünme de vardır. Bayes teoremi, bir olayın olasılığının nasıl tek bir bilgiye bağlı olmadığını ve yeni bilgiler geldikçe bu olasılığın nasıl değişeceğini formüle eder. Bayesçi düşünme, bir hipoteze verdiğimiz olasılığı sabit tutmamamızı, yeni bir bilgi geldiğinde değiştirmemizi önerir. Temel olarak, herhangi bir olayın doğruluğu hakkındaki önsel olasılık bilgimizin, yeni deliller eklendikçe değişmesi gerektiğini söyler.
+
+### Bankadaki Adam Deneyi
+
+Daha iyi anlamak için bir düşünce deneyi yapalım. Öncelikle, elimizde bir önsel olasılık bilgisi var: Suç olaylarında gözaltına alınan şüphelilerin suçlu olma olasılığı yüzde 20. Yani, mahkemeye getirilen her 5 şüpheliden sadece biri sonunda suçlu bulunuyor. Şimdi, siz bir hakimsiniz ve dava başladı. Dava başladığı anda, karşınızdaki şüphelinin suçlu olma olasılığı sizin için yüzde 20 olmalıdır.
+
+Sonrasında, bu kişi hakkındaki delilleri incelemeye başlıyorsunuz. Örneğin, bu bir hırsızlık suçu ve şüphelinin parmak izleri, marketteki kasa veya çalınan eşyaların bulunduğu raflarda tespit edilmiş. Şüphelinin suçlu olup olmadığını bir terazide tartmaya çalışırsak, bu delil terazide şüphelinin suçlu olduğu tarafına bir ağırlık ekleyecektir. Ayrıca, şüpheli ile market sahibi arasında eski bir husumet olduğu bilgisini de aldınız. Bu husumetin varlığı da yine terazinin şüphelinin suçlu olduğu tarafına bir ağırlık ekleyecektir. Sonuçta aralarında husumet olan iki kişi arasında böyle bir olayın yaşanması, rastgele iki kişi arasında yaşanmasından daha muhtemel olabilir, değil mi?
+
+Ancak daha sonra yeni bir delil ortaya çıkıyor: Olay anında şüpheli, bir bankanın güvenlik kameraları tarafından bankada işlem yaparken açıkça görüntülenmiş. Bu son delil, şüphelinin suçlu olma ihtimalini neredeyse ortadan kaldırır, çünkü bir insan aynı anda iki yerde olamaz.
+
+İşte Bayesçi düşünme veya terazi ilkesi dediğimiz şey bu şekilde elimizdeki verileri tartmaktır. Hatta hemen yapalım. Örneğin aralarındaki husumete 30 puan, parmak izi olayına 60 puan verelim (bu puanlar şüphelinin aleyhine olan iddiaları gösteriyor). Banka kaydı gibi şüphelinin lehine olan bilgiye de -200 puan verelim. Bu puanları tarttığımızda, terazinin şüphelinin suçlu olmadığı tarafına büyük bir ağırlık eklendiğini görürüz.
+
+"Peki, bunda ne var ki?" diye düşünebilirsiniz. Bu zaten basit ve mantıklı bir yaklaşım gibi görünebilir. Ancak, gerçekte insanlar bu tartı yöntemini kullanmakta pek başarılı değiller. Genellikle aceleci kararlar verme eğiliminde oluyorlar. Bu eğilim, insan zihninin belirsizliklerle başa çıkmak için programlanmamış olmasından ve istatistiksel düşünme konusunda deneyimsiz olmasından kaynaklanıyor. Ve en önemlisi, aceleci yargılar genellikle hatalara yol açıyor ve dünyamızı daha kötü bir yer haline getiriyor.
+
+### Bağdaşmazlıklar ve çelişkiler
+
+Aceleci yargıların bir sonucu olarak, insanlar karşılaştıkları bilgileri ya çok hızlı kabul eder ya da çok hızlı reddederler. Özellikle felsefi tartışmalarda, iki yargı arasında keyfi ve hızlı bir şekilde çelişki iddialarında bulunabilirler. Oysaki çelişki olarak yorumlanan durumların çoğu gerçekte çelişki değildir. **Çelişki, aynı anda hem doğru hem de yanlış olamayacak iki ifadenin bir arada bulunması durumudur.** Örneğin, "Şu an oturuyorum" ve "Şu an ayaktayım" ifadeleri aynı anda doğru olamaz, bu yüzden bu iki ifade bir çelişkidir.
+
+Ancak bir de bağdaşmazlık, uyuşmazlık veya gerilim olarak ifade ettiğimiz durumlar vardır. **Bağdaşmayan iki ifade, birlikte tutarlı bir sistem oluşturmada sorun çıkaran, birinin doğru olması durumunda diğerinin yanlış olmasını bekleyeceğimiz ifadelerdir.**
+
+Fizikteki bazı teoriler arasında bağdaşmazlıklardan söz edebiliriz. Hatta fizikçiler bu bağdaşmazlıklardan teorileri birleştirerek, "her şeyin teorisini" bulmaya çalışırarak kurtulmayı amaçlarlar. Kuantum mekaniği, mikro düzeydeki parçacıkları ve kuvvetleri açıklamada son derece başarılıdır, ancak yerçekimi kuvvetini açıklamada yetersiz kalır. Genel görelilik ise büyük ölçeklerde yerçekimini başarıyla açıklar, ancak genel göreliliğin denklemleriyle kuantum mekaniğini açıklamaya çalıştığımızda sorunlar ortaya çıkar. Peki, bu iki teori arasında bir çelişki var mıdır? Hayır. Sadece ortada bilmediğimiz bazı şeyler vardır ve bu da bizi bağdaşmayan, gerilimli iki teoriye götürür. Tıpkı önceki örnekte parmak izi delili ile banka delilinin birbiriyle bağdaşmaması, ancak ikisinin de gerçek olması ve aralarında bir çelişki olmaması gibi. 
+
+Veya örneğin felsefedeki bir bağdaşmazlık, en azından bazılarına göre, özgür irade ve determinizm konusundadır. "Özgür irade vardır" ve "determinizm vardır" ifadeleri doğrudan bir çelişki oluşturmasa da, tüm olayların önceden belirlenmiş neden-sonuç ilişkilerine bağlı olması, seçimlerini özgürce yapabilen bir insanın varlığı ile bir gerilim yaratır.
+
+### Sonuç
+
+Aslında çelişki ile bağdaşmazlık kavramlarını ayırt etmek bile sorunun büyük bir kısmını çözer. Çünkü bağdaştıramadığımız her şeye çelişki veya saçmalık diyerek yanlış inançlara kapılmamızı engeller. Bunun yanı sıra, sınırlı bir anlayış ve bilgi kapasitemize sahip olduğumuzu kabul etmeli ve neredeyse hiçbir şeyden tam anlamıyla emin olamayacağımızın bilincinde olarak hareket etmeliyiz.
