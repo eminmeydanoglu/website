@@ -7,4 +7,3 @@ Hi there!
 1. You will find various writings, project diaries in this website.
 2. I publish a big chunk of my Obsidian vault, anything that isn't super personal, at https://eminmeydanoglu.github.io/digitalgarden/
 3. I have a YouTube channel, mostly dedicated to philosophy (almost all videos in Turkish): www.youtube.com/@eminmeydanoglu
-
