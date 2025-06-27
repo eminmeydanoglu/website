@@ -32,7 +32,7 @@ const Header = () => {
               <div key={link.title} className="flex items-center">
                 <Link
                   href={link.href}
-                  className="hover:text-primary-500 dark:hover:text-primary-400 m-1 font-medium text-gray-900 dark:text-gray-100"
+                  className="hover:text-primary-500 dark:hover:text-primary-400 m-1 text-center font-medium text-gray-900 dark:text-gray-100"
                 >
                   {link.title}
                 </Link>
