@@ -12,7 +12,12 @@ export default function CV() {
       </div>
       <div className="container py-12">
         <div className="-m-4 flex flex-wrap">
-          <iframe src="/static/cv.pdf" width="100%" height="800px" title="CV" />
+          <object data="/static/cv.pdf" type="application/pdf" width="100%" height="800px">
+            <p>
+              Your browser does not support PDFs. Please download the PDF to view it:{' '}
+              <a href="/static/cv.pdf">Download PDF</a>.
+            </p>
+          </object>
         </div>
       </div>
     </div>
