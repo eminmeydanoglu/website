@@ -26,7 +26,7 @@ export default function Home({ posts }) {
         {/* ✍️ Latest Writings Section */}
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h2 className="text-center text-2xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-3xl sm:leading-10 md:text-4xl md:leading-14 dark:text-gray-100">
-            my latest writings
+            latest writings
           </h2>
         </div>
 
