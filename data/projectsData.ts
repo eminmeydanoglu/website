@@ -5,6 +5,13 @@ interface Project {
   imgSrc?: string
 }
 
-const projectsData: Project[] = []
+const projectsData: Project[] = [
+  {
+    title: 'Solving AUV Autonomy',
+    description: `A journey to make intelligent underwater robots`,
+    imgSrc: '/static/images/auv.png',
+    href: '/projects/building-an-auv',
+  },
+]
 
 export default projectsData
