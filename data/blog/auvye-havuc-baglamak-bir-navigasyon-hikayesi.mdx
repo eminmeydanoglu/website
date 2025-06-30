@@ -1,0 +1,125 @@
+---
+title: 'AUV’ye havuç bağlamak | Bir navigasyon hikayesi'
+date: '2025-06-30'
+tags: ['auv', 'navigasyon', 'robotik', 'otonomi', 'taluy', 'havuç']
+draft: false
+summary: 'Otonom sistemlerde navigasyon, robotun haritada belirlenmiş bir hedefe güvenle ve etrafı yıkmadan gitmesinden sorumlu sistemdir. Bu yazıda, taluy’un navigasyon sisteminde yaptığımız yenilikleri ve geliştirdiğimiz “Havucu Takip Et” metodunu anlatacağız.'
+---
+
+![image.png](/static/images/havuc.png)
+
+Otonom sistemlerde navigasyon, robotun haritada belirlenmiş bir hedefe güvenle ve etrafı yıkmadan gitmesinden sorumlu sistemdir. Bu yazıda, taluy’un navigasyon sisteminde yaptığımız yenilikleri ve geliştirdiğimiz “Havucu Takip Et” metodunu anlatacağız.
+
+### **Tek Kişilik Dev Kadro: Align Frame Controller**
+
+Align Frame Controller (AFC), robot üzerindeki herhangi bir frame’i dışarıdaki sabit veya hareketli bir frame ile hizalamak için geliştirilmiş basit bir kontrolcüdür. Çalışma mantığı oldukça nettir:
+
+1. İki frame arasındaki hata hesaplanır.
+2. Bu hata bir P kontrolcü ile hız komutlarına dönüştürülür.
+3. Hız komutları alt seviye kontrolcülere aktarılır.
+
+Bu basit yöntemi etkili bir navigasyon sistemi olarak kullanmak mümkün müdür? Taluy için geçmişte kullandığımız yöntem tam da buydu: taluy’dan hedef noktasına kadar belirli aralıklarla hareket edecek bir frame oluştururduk. Bu frame, robotun (umulur ki) takip edebileceği sabit bir hızla hedefe ilerlerdi. Ancak, robotun gerçekte ne yaptığı dikkate alınmadığından, robot çoğu zaman hedef frame’i yakalayamaz ve istenilen yol takip edilemezdi.
+
+Ne mutlu ki, birkaç düzenlemeyle bu sistemi çok daha iyi hale getirebilirdik, ve yaptık:
+
+### Havucu takip et
+
+Önceki sistemin temel sorunu, dinamik hedef frame’in robotun mevcut durumunu göz ardı etmesiydi. Robot osilasyonda kalmış olsa da, kontrolcüler çalışmıyor olsa da bu canlı frame kendisine sinyal verildiği anda harekete geçiyor ve belli bir hızda hedefe varıyordu. Bu nedenle robot sıklıkla hedef frame’e yetişemiyor ve rota takibinde sorunlar yaşanıyordu.
+
+Biz yeni sistemde başlıca iki yeni özellik geliştirdik:
+
+1. Path tabanlı rota tanımlama
+
+   Robotun hedef noktasına ulaşmak için izleyeceği rotayı nav_msgs/Path mesaj türünde oluşturmaya başladık. Bu mesaj tipi sıralı noktaların birleşiminden oluşur. Bir fonksiyon eğrisinden farkı, her noktanın pozisyonla beraber bir oryantasyona da sahip olmasıdır.
+
+   ```yaml
+   nav_msgs/Path:
+
+   std_msgs/Header header
+     uint32 seq
+     time stamp
+     string frame_id
+
+   geometry_msgs/PoseStamped[] poses
+     std_msgs/Header header
+       uint32 seq
+       time stamp
+       string frame_id
+     geometry_msgs/Pose pose
+       geometry_msgs/Point position
+       geometry_msgs/Quaternion orientation
+
+   ```
+
+   Bu sayede robotun izleyeceği yol açıkça tanımlanmış ve görselleştirilmiş olur.
+
+**2. Dinamik Hedef Frame Hesaplayıcı**
+
+Robotun mevcut pozisyonunu sürekli dikkate alan, yol üzerindeki hedef noktayı dinamik olarak belirleyen bir algoritma geliştirdik. Yeni sistem, basitçe aşağıdaki adımları izler:
+
+1. Robotun konumu ve yol bilgisini alır.
+2. Path üzerindeki noktaların robota göre Euclidian uzaklıklarını hesaplar.
+3. Robota uzaklık değeri 1 metreye en yakın olan noktayı seçer. Bu da demektir ki, eğer tüm noktalar 1 metreden daha yakınsa, path’in son elemanını (index[-1]) seçer.
+   1. bu frame, her zaman ama her zaman path noktalarından birisidir, ya da ikisi arasında interpole edilmiştir (çünkü onların arasından seçtik).
+4. Seçilen nokta robota göre bir frame’e dönüştürülüp align frame controller’a verilir.
+5. Bu işlemler, saniyede 20 kez gerçekleşir.
+
+Dinamik frame hesaplayıcı fonksiyonumuz:
+
+```python
+def calculate_dynamic_target(
+    path: Path, robot_pose: PoseStamped, dynamic_target_lookahead_distance: float
+) -> Optional[PoseStamped]:
+
+    if not path.poses or dynamic_target_lookahead_distance <= 0:
+        return None
+
+    closest_index = find_closest_point_index(path, robot_pose)
+
+    # If closest to last point, return it
+    if closest_index >= len(path.poses) - 1:
+        return path.poses[-1]
+
+    # Walk along path segments until we've consumed dynamic_target_lookahead_distance
+    remaining_distance = dynamic_target_lookahead_distance
+    current_index = closest_index
+
+    while remaining_distance > 0 and current_index < len(path.poses) - 1:
+        segment_start = path.poses[current_index].pose
+        segment_end = path.poses[current_index + 1].pose
+
+        # Compute Euclidean distance between segment_start and segment_end.
+        dx = segment_end.position.x - segment_start.position.x
+        dy = segment_end.position.y - segment_start.position.y
+        dz = segment_end.position.z - segment_start.position.z
+        segment_distance = np.linalg.norm(np.array([dx, dy, dz]))
+
+        # Skip zero-length segments
+        if segment_distance < ZERO_DISTANCE_TOLERANCE:
+            current_index += 1
+            continue
+
+        # If we can place target on this segment
+        if remaining_distance <= segment_distance:
+            ratio = remaining_distance / segment_distance
+            dynamic_target_pose = PoseStamped()
+            dynamic_target_pose.header = path.header
+            dynamic_target_pose.pose.position.x = segment_start.position.x + ratio * dx
+            dynamic_target_pose.pose.position.y = segment_start.position.y + ratio * dy
+            dynamic_target_pose.pose.position.z = segment_start.position.z + ratio * dz
+            # Use the orientation of the segment end.
+            dynamic_target_pose.pose.orientation = segment_end.orientation
+            return dynamic_target_pose
+
+        remaining_distance -= segment_distance  # Move to next segment
+        current_index += 1
+
+    # If we've consumed all segments, return last pose as target
+    return path.poses[-1]
+```
+
+Bu hesaplayıcı, bize robot hareket ettikçe ondan uzaklaşan ama mesafesini koruyan (1 metre) bir dinamik frame hediye etmiş olur. Bu sayede, eski sistemdeki koordinasyon sorunu ortadan kalkmış olur, çünkü dinamik frame artık robotun nerede olduğunu kaale almaktadır. Robot bir yere gitmezse, o da yola devam etmez. Robot dinamik target’ı takip eder, dinamik target rotayı takip eder, sonuç olarak taluy rotayı takip etmiş olur.
+
+### Gelecek üzerine notlar
+
+Yeni navigasyon sistemimiz, eskisine göre çok daha başarılı olsa da ihtiyaçlarımıza tam karşılık veremiyor. En büyük eksikliklerinden biri, engelleri kaale almaması. Yani object avoidance’a sahip değil. Buna ihtiyacımız olacak. Bir sonraki seviye navigasyon sistemimiz ise yolda.
