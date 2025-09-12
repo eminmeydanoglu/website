@@ -3,7 +3,8 @@ title: 'AUV’ye havuç bağlamak | Bir navigasyon hikayesi'
 date: '2025-06-30'
 tags: ['auv', 'navigasyon', 'robotik', 'otonomi', 'taluy', 'havuç']
 draft: false
-summary: 'Otonom sistemlerde navigasyon, robotun haritada belirlenmiş bir hedefe güvenle ve etrafı yıkmadan gitmesinden sorumlu sistemdir. Bu yazıda, taluy’un navigasyon sisteminde yaptığımız yenilikleri ve geliştirdiğimiz “Havucu Takip Et” metodunu anlatacağız.'
+summary: >
+  Otonom sistemlerde navigasyon, robotun haritada belirlenmiş bir hedefe güvenle ve etrafı yıkmadan gitmesinden sorumlu sistemdir. Bu yazıda, taluy’un navigasyon sisteminde yaptığımız yenilikleri ve geliştirdiğimiz “Havucu Takip Et” metodunu anlatacağız.
 ---
 
 ![image.png](/static/images/havuc.png)
@@ -30,7 +31,7 @@ Biz yeni sistemde başlıca iki yeni özellik geliştirdik:
 
 1. Path tabanlı rota tanımlama
 
-   Robotun hedef noktasına ulaşmak için izleyeceği rotayı nav_msgs/Path mesaj türünde oluşturmaya başladık. Bu mesaj tipi sıralı noktaların birleşiminden oluşur. Bir fonksiyon eğrisinden farkı, her noktanın pozisyonla beraber bir oryantasyona da sahip olmasıdır.
+   Robotun hedef noktasına ulaşmak için izleyeceği rotayı nav_msgs/Path mesaj türünde oluşturmaya başladık. Bu mesaj tipi sıralı noktaların birleşiminden oluşur. Bir fonksiyon eğrisinden farkı, her noktanın pozisyonla beraber bir oryantasyona da sahip olmasıdır.
 
    ```yaml
    nav_msgs/Path:
@@ -48,7 +49,6 @@ Biz yeni sistemde başlıca iki yeni özellik geliştirdik:
      geometry_msgs/Pose pose
        geometry_msgs/Point position
        geometry_msgs/Quaternion orientation
-
    ```
 
    Bu sayede robotun izleyeceği yol açıkça tanımlanmış ve görselleştirilmiş olur.
