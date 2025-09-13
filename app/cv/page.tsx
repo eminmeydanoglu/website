@@ -1,4 +1,5 @@
 import { genPageMetadata } from 'app/seo'
+import PDFViewer from '@/components/PDFViewer'
 
 export const metadata = genPageMetadata({ title: 'CV' })
 
@@ -11,13 +12,8 @@ export default function CV() {
         </h1>
       </div>
       <div className="container py-12">
-        <div className="-m-4 flex flex-wrap">
-          <object data="/static/cv.pdf" type="application/pdf" width="100%" height="800px">
-            <p>
-              Your browser does not support PDFs. Please download the PDF to view it:{' '}
-              <a href="/static/cv.pdf">Download PDF</a>.
-            </p>
-          </object>
+        <div className="flex justify-center">
+          <PDFViewer pdfUrl="/static/cv.pdf" className="w-full max-w-4xl" />
         </div>
       </div>
     </div>
