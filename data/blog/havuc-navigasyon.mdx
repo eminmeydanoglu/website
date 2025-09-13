@@ -1,0 +1,82 @@
+---
+title: AUV Navigasyon
+date: 2025-09-14
+tags: [auv]
+draft: false
+summary: Navigasyon hikayesi
+---
+
+Bu bir test yazısıdır.
+
+## Tek Kişilik Dev Kadro: Align Frame Controller
+
+Align Frame Controller (AFC), robot üzerindeki herhangi bir frame'i dışarıdaki sabit veya hareketli bir frame ile hizalamak için geliştirilmiş basit bir kontrolcüdür. Çalışma mantığı oldukça nettir:
+
+1. İki frame arasındaki hata hesaplanır.
+2. Bu hata bir P kontrolcü ile hız komutlarına dönüştürülür.
+3. Hız komutları alt seviye kontrolcülere aktarılır.
+
+Bu basit yöntemi etkili bir navigasyon sistemi olarak kullanmak mümkün müdür? Taluy için geçmişte kullandığımız yöntem tam da buydu: taluy'dan hedef noktasına kadar belirli aralıklarla hareket edecek bir frame oluştururduk.
+
+## Havucu takip et
+
+Önceki sistemin temel sorunu, dinamik hedef frame'in robotun mevcut durumunu göz ardı etmesiydi. Robot osilasyonda kalmış olsa da, kontrolcüler çalışmıyor olsa da bu canlı frame kendisine sinyal verildiği anda harekete geçiyor ve belli bir hızda hedefe varıyordu.
+
+Biz yeni sistemde başlıca iki yeni özellik geliştirdik:
+
+### 1. Path tabanlı rota tanımlama
+
+Robotun hedef noktasına ulaşmak için izleyeceği rotayı nav_msgs/Path mesaj türünde oluşturmaya başladık. Bu mesaj tipi sıralı noktaların birleşiminden oluşur.
+
+```
+nav_msgs/Path:
+  std_msgs/Header header
+  geometry_msgs/PoseStamped[] poses
+```
+
+### 2. Dinamik Hedef Frame Hesaplayıcı
+
+Robotun mevcut pozisyonunu sürekli dikkate alan, yol üzerindeki hedef noktayı dinamik olarak belirleyen bir algoritma geliştirdik. Yeni sistem şu adımları izler:
+
+1. Robotun konumu ve yol bilgisini alır.
+2. Path üzerindeki noktaların robota göre Euclidian uzaklıklarını hesaplar.
+3. Robota uzaklık değeri 1 metreye en yakın olan noktayı seçer.
+4. Seçilen nokta robota göre bir frame'e dönüştürülüp align frame controller'a verilir.
+5. Bu işlemler, saniyede 20 kez gerçekleşir.
+
+```python
+def calculate_dynamic_target(path, robot_pose, lookahead_distance):
+    if not path.poses or lookahead_distance <= 0:
+        return None
+
+    closest_index = find_closest_point_index(path, robot_pose)
+
+    if closest_index >= len(path.poses) - 1:
+        return path.poses[-1]
+
+    # Walk along path segments
+    remaining_distance = lookahead_distance
+    current_index = closest_index
+
+    while remaining_distance > 0 and current_index < len(path.poses) - 1:
+        segment_start = path.poses[current_index].pose
+        segment_end = path.poses[current_index + 1].pose
+
+        # Compute distance
+        segment_distance = calculate_distance(segment_start, segment_end)
+
+        if remaining_distance <= segment_distance:
+            ratio = remaining_distance / segment_distance
+            return interpolate_pose(segment_start, segment_end, ratio)
+
+        remaining_distance -= segment_distance
+        current_index += 1
+
+    return path.poses[-1]
+```
+
+Bu hesaplayıcı, bize robot hareket ettikçe ondan uzaklaşan ama mesafesini koruyan (1 metre) bir dinamik frame hediye etmiş olur.
+
+## Gelecek üzerine notlar
+
+Yeni navigasyon sistemimiz, eskisine göre çok daha başarılı olsa da ihtiyaçlarımıza tam karşılık veremiyor. En büyük eksikliklerinden biri, engelleri kaele almaması. Yani object avoidance'a sahip değil. Buna ihtiyacımız olacak.
