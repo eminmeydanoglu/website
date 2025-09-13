@@ -67,12 +67,21 @@ export default function PDFViewer({ pdfUrl, className = '' }: PDFViewerProps) {
   return (
     <div className={`flex flex-col items-center ${className}`}>
       <div className="w-full max-w-4xl overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800">
-        <iframe
-          src={`${pdfUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
-          className="h-[800px] w-full border-0"
-          title="CV PDF"
-          loading="lazy"
-        />
+        <object data={pdfUrl} type="application/pdf" className="h-[800px] w-full" title="CV PDF">
+          <iframe src={pdfUrl} className="h-[800px] w-full border-0" title="CV PDF (fallback)">
+            <p className="p-8 text-center text-gray-600 dark:text-gray-400">
+              Your browser does not support PDF viewing. Please{' '}
+              <a
+                href={pdfUrl}
+                className="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 underline"
+                download
+              >
+                download the PDF
+              </a>{' '}
+              to view it.
+            </p>
+          </iframe>
+        </object>
       </div>
 
       <div className="mt-4">

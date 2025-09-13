@@ -13,7 +13,8 @@ const ContentSecurityPolicy = `
   media-src *.s3.amazonaws.com;
   connect-src *;
   font-src 'self';
-  frame-src giscus.app http://localhost:3000
+  frame-src 'self' giscus.app http://localhost:3000;
+  object-src 'self';
 `
 
 const securityHeaders = [
