@@ -32,10 +32,10 @@ const Header = () => {
         </div>
       </Link>
       <div className="flex items-center space-x-4 leading-5 sm:-mr-6 sm:space-x-6">
-        <div className="no-scrollbar hidden max-w-40 items-center gap-x-4 overflow-x-auto sm:flex md:max-w-72 lg:max-w-96">
+        <div className="hidden items-center divide-x divide-gray-300 sm:flex dark:divide-gray-600">
           {headerNavLinks
             .filter((link) => link.title !== 'Home')
-            .map((link, index) => {
+            .map((link) => {
               // Map original titles to translation keys
               const getTranslationKey = (title: string) => {
                 switch (title) {
@@ -58,17 +58,13 @@ const Header = () => {
                 : link.title
 
               return (
-                <div key={link.title} className="flex items-center">
-                  <Link
-                    href={link.href}
-                    className="hover:text-primary-500 dark:hover:text-primary-400 m-1 text-center font-medium text-gray-900 dark:text-gray-100"
-                  >
-                    {displayTitle}
-                  </Link>
-                  {index < headerNavLinks.filter((link) => link.title !== 'Home').length - 1 && (
-                    <div className="mx-2 h-6 border-l border-gray-300 dark:border-gray-600"></div>
-                  )}
-                </div>
+                <Link
+                  key={link.title}
+                  href={link.href}
+                  className="hover:text-primary-500 dark:hover:text-primary-400 px-4 py-2 text-center font-medium text-gray-900 dark:text-gray-100"
+                >
+                  {displayTitle}
+                </Link>
               )
             })}
         </div>
