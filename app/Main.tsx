@@ -1,3 +1,5 @@
+'use client'
+
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
@@ -7,11 +9,22 @@ import { Authors, allAuthors } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
+import { useLanguage } from '@/lib/LanguageContext'
 
 const MAX_DISPLAY = 5
 
 export default function Home({ posts }) {
-  const author = allAuthors.find((p) => p.slug === 'default') as Authors
+  const { language, t } = useLanguage()
+
+  // Load language-specific author profile
+  const authorSlug = `default.${language}`
+  let author = allAuthors.find((p) => p.slug === authorSlug) as Authors
+
+  // Fallback to default if language-specific version doesn't exist
+  if (!author) {
+    author = allAuthors.find((p) => p.slug === 'default') as Authors
+  }
+
   const mainContent = coreContent(author)
 
   return (
@@ -26,13 +39,13 @@ export default function Home({ posts }) {
         {/* ✍️ Latest Writings Section */}
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h2 className="text-center text-2xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-3xl sm:leading-10 md:text-4xl md:leading-14 dark:text-gray-100">
-            latest writings
+            {language === 'en' ? 'latest writings' : 'son yazılar'}
           </h2>
         </div>
 
         {/* 📝 Posts List */}
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {!posts.length && 'No posts found.'}
+          {!posts.length && t('ui.no-posts')}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags } = post
             return (
@@ -70,9 +83,9 @@ export default function Home({ posts }) {
                         <Link
                           href={`/blog/${slug}`}
                           className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                          aria-label={`Read more: "${title}"`}
+                          aria-label={`${t('ui.read-more')}: "${title}"`}
                         >
-                          Read more &rarr;
+                          {t('ui.read-more')} &rarr;
                         </Link>
                       </div>
                     </div>
@@ -90,9 +103,9 @@ export default function Home({ posts }) {
           <Link
             href="/blog"
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label="All posts"
+            aria-label={t('ui.all-posts')}
           >
-            All Posts &rarr;
+            {t('ui.all-posts')} &rarr;
           </Link>
         </div>
       )}

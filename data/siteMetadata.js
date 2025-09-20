@@ -3,8 +3,8 @@ const siteMetadata = {
   title: 'Emin Meydanoğlu',
   author: 'Emin Meydanoğlu',
   headerTitle: 'Emin Meydanoğlu',
-  description: 'Another website',
-  language: 'en-us',
+  description: 'Another website', // English as default
+  language: 'en-US', // English as default language
   theme: 'system', // system, dark or light
   siteUrl: 'https://meydanoglu.com',
   siteRepo: 'https://github.com/eminmeydanoglu/website',
@@ -22,7 +22,7 @@ const siteMetadata = {
   instagram: 'https://www.instagram.com',
   medium: 'https://medium.com',
   bluesky: 'https://bsky.app/',
-  locale: 'en-US',
+  locale: 'en-US', // English as default locale
   // set to true if you want a navbar fixed to the top
   stickyNav: true,
   analytics: {
