@@ -10,6 +10,7 @@ import Tag from '@/components/Tag'
 import Image from '@/components/Image' // Import Image component
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
+import { useTranslation } from '@/lib/LanguageContext'
 
 interface PaginationProps {
   totalPages: number

@@ -5,8 +5,11 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import { useTranslation } from '@/lib/LanguageContext'
+import { TranslationKey } from '@/lib/i18n'
 
 const MobileNav = () => {
+  const { t } = useTranslation()
   const [navShow, setNavShow] = useState(false)
   const navRef = useRef(null)
 
@@ -72,16 +75,41 @@ const MobileNav = () => {
                 ref={navRef}
                 className="mt-8 flex h-full basis-0 flex-col items-start overflow-y-auto pt-2 pl-12 text-left"
               >
-                {headerNavLinks.map((link) => (
-                  <Link
-                    key={link.title}
-                    href={link.href}
-                    className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 dark:text-gray-100"
-                    onClick={onToggleNav}
-                  >
-                    {link.title}
-                  </Link>
-                ))}
+                {headerNavLinks.map((link) => {
+                  // Map original titles to translation keys
+                  const getTranslationKey = (title: string) => {
+                    switch (title) {
+                      case 'Home':
+                        return 'nav.home'
+                      case 'check my mind':
+                        return 'nav.check-my-mind'
+                      case 'writings':
+                        return 'nav.writings'
+                      case 'projects':
+                        return 'nav.projects'
+                      case 'cv':
+                        return 'nav.cv'
+                      default:
+                        return title
+                    }
+                  }
+
+                  const translationKey = getTranslationKey(link.title)
+                  const displayTitle = translationKey.startsWith('nav.')
+                    ? t(translationKey as TranslationKey)
+                    : link.title
+
+                  return (
+                    <Link
+                      key={link.title}
+                      href={link.href}
+                      className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 dark:text-gray-100"
+                      onClick={onToggleNav}
+                    >
+                      {displayTitle}
+                    </Link>
+                  )
+                })}
               </nav>
 
               <button
