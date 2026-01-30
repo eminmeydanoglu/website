@@ -38,7 +38,7 @@ const CategoryBadge = ({ categoryId }: { categoryId: string }) => {
   )
 }
 
-const PostCard = ({ title, slug, summary, thumbnail, category, icon, date }: PostCardProps) => {
+const PostCard = ({ title, slug, summary, thumbnail, category, date }: PostCardProps) => {
   const href = `/blog/${slug}`
   const formattedDate = new Date(date).toLocaleDateString('tr-TR', {
     year: 'numeric',
@@ -63,17 +63,16 @@ const PostCard = ({ title, slug, summary, thumbnail, category, icon, date }: Pos
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
-            <span className="text-4xl">{icon || '📝'}</span>
+            <span className="text-4xl text-gray-400">📄</span>
           </div>
         )}
       </Link>
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
-        {/* Title with icon */}
+        {/* Title */}
         <h2 className="mb-2 text-xl leading-snug font-bold tracking-tight text-gray-900 dark:text-gray-100">
           <Link href={href} className="hover:text-primary-500 dark:hover:text-primary-400">
-            {icon && <span className="mr-2">{icon}</span>}
             {title}
           </Link>
         </h2>
