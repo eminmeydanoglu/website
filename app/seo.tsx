@@ -10,6 +10,18 @@ interface PageSEOProps {
 }
 
 export function genPageMetadata({ title, description, image, ...rest }: PageSEOProps): Metadata {
+  const basePath = process.env.BASE_PATH || ''
+  const normalizeImage = (img: string) => {
+    if (img.startsWith('http')) return img
+    const withLeadingSlash = img.startsWith('/') ? img : `/${img}`
+    const withBasePath =
+      basePath && !withLeadingSlash.startsWith(`${basePath}/`)
+        ? `${basePath}${withLeadingSlash}`
+        : withLeadingSlash
+    return `${siteMetadata.siteUrl.replace(/\/$/, '')}${withBasePath}`
+  }
+  const resolvedImage = normalizeImage(image || siteMetadata.socialBanner)
+
   return {
     title,
     description: description || siteMetadata.description,
@@ -18,14 +30,14 @@ export function genPageMetadata({ title, description, image, ...rest }: PageSEOP
       description: description || siteMetadata.description,
       url: './',
       siteName: siteMetadata.title,
-      images: image ? [image] : [siteMetadata.socialBanner],
+      images: [resolvedImage],
       locale: 'en_US',
       type: 'website',
     },
     twitter: {
       title: `${title} | ${siteMetadata.title}`,
       card: 'summary_large_image',
-      images: image ? [image] : [siteMetadata.socialBanner],
+      images: [resolvedImage],
     },
     ...rest,
   }
