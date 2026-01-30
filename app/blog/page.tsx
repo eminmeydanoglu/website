@@ -1,29 +1,24 @@
 'use client'
 
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
+import { Suspense } from 'react'
 import { allBlogs } from 'contentlayer/generated'
-import ListLayout from '@/layouts/ListLayoutWithTags'
+import GalleryLayout from '@/layouts/GalleryLayout'
 import { useTranslation } from '@/lib/LanguageContext'
 
-const POSTS_PER_PAGE = 5
+function BlogContent() {
+  const { t } = useTranslation()
+  // Filter out drafts and sort by date
+  const posts = allBlogs
+    .filter((post) => !post.draft)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+  return <GalleryLayout posts={posts} title={t('page.blog')} />
+}
 
 export default function BlogPage() {
-  const { t } = useTranslation()
-  const posts = allCoreContent(sortPosts(allBlogs))
-  const pageNumber = 1
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
-  const initialDisplayPosts = posts.slice(0, POSTS_PER_PAGE * pageNumber)
-  const pagination = {
-    currentPage: pageNumber,
-    totalPages: totalPages,
-  }
-
   return (
-    <ListLayout
-      posts={posts}
-      initialDisplayPosts={initialDisplayPosts}
-      pagination={pagination}
-      title={t('page.blog')}
-    />
+    <Suspense fallback={<div className="py-16 text-center">Yükleniyor...</div>}>
+      <BlogContent />
+    </Suspense>
   )
 }
