@@ -86,33 +86,35 @@ export default function GalleryLayout({ posts, title }: GalleryLayoutProps) {
   }
 
   return (
-    <div className="relative right-1/2 left-1/2 -mx-[50vw] w-screen px-4 sm:px-8 lg:px-12">
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            {title}
-          </h1>
-        </div>
+    <>
+      <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+          {title}
+        </h1>
+      </div>
 
-        <div className="py-8">
-          <FilterBar
-            selectedCategory={category}
-            searchQuery={search}
-            sortBy={sortBy}
-            onCategoryChange={setCategory}
-            onSearchChange={setSearch}
-            onSortChange={setSortBy}
-            onClear={handleClear}
-          />
+      <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6 xl:-mx-8 xl:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="border-t border-gray-200 py-8 dark:border-gray-700">
+            <FilterBar
+              selectedCategory={category}
+              searchQuery={search}
+              sortBy={sortBy}
+              onCategoryChange={setCategory}
+              onSearchChange={setSearch}
+              onSortChange={setSortBy}
+              onClear={handleClear}
+            />
 
-          <GalleryGrid posts={filteredPosts} />
+            <GalleryGrid posts={filteredPosts} />
 
-          {/* Results count */}
-          <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            {filteredPosts.length} yazı gösteriliyor
-          </p>
+            {/* Results count */}
+            <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              {filteredPosts.length} yazı gösteriliyor
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
