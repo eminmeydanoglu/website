@@ -71,7 +71,7 @@ const PostCard = ({ title, slug, summary, thumbnail, category, icon, date }: Pos
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
         {/* Title with icon */}
-        <h2 className="mb-2 text-lg leading-tight font-bold tracking-tight text-gray-900 dark:text-gray-100">
+        <h2 className="mb-2 text-xl leading-snug font-bold tracking-tight text-gray-900 dark:text-gray-100">
           <Link href={href} className="hover:text-primary-500 dark:hover:text-primary-400">
             {icon && <span className="mr-2">{icon}</span>}
             {title}
@@ -87,9 +87,7 @@ const PostCard = ({ title, slug, summary, thumbnail, category, icon, date }: Pos
 
         {/* Summary */}
         {summary && (
-          <p className="mb-3 line-clamp-3 flex-1 text-sm text-gray-600 dark:text-gray-400">
-            {summary}
-          </p>
+          <p className="mb-3 flex-1 text-sm text-gray-600 dark:text-gray-400">{summary}</p>
         )}
 
         {/* Date */}
