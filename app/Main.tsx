@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { Authors, allAuthors, allBlogs } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
@@ -36,7 +37,9 @@ export default function Home({ posts }) {
       </div>
 
       {/* Writings Gallery */}
-      <GalleryLayout posts={filteredPosts} title={language === 'en' ? 'Writings' : 'Yazılar'} />
+      <Suspense fallback={<div className="py-8 text-center text-gray-500">Yükleniyor...</div>}>
+        <GalleryLayout posts={filteredPosts} title={language === 'en' ? 'Writings' : 'Yazılar'} />
+      </Suspense>
     </>
   )
 }
