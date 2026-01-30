@@ -100,7 +100,7 @@ export const translations = {
     'ui.search-placeholder': 'Search articles...',
 
     // Pages
-    'page.blog': 'Blog',
+    'page.blog': 'Writings',
     'page.projects': 'Projects',
     'page.cv': 'CV',
     'page.tags': 'Tags',

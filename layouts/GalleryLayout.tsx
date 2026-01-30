@@ -93,27 +93,23 @@ export default function GalleryLayout({ posts, title }: GalleryLayoutProps) {
         </h1>
       </div>
 
-      <div className="relative -mx-4 px-4 sm:-mx-6 sm:px-6 xl:-mx-8 xl:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="border-t border-gray-200 py-8 dark:border-gray-700">
-            <FilterBar
-              selectedCategory={category}
-              searchQuery={search}
-              sortBy={sortBy}
-              onCategoryChange={setCategory}
-              onSearchChange={setSearch}
-              onSortChange={setSortBy}
-              onClear={handleClear}
-            />
+      <div className="border-t border-gray-200 py-8 dark:border-gray-700">
+        <FilterBar
+          selectedCategory={category}
+          searchQuery={search}
+          sortBy={sortBy}
+          onCategoryChange={setCategory}
+          onSearchChange={setSearch}
+          onSortChange={setSortBy}
+          onClear={handleClear}
+        />
 
-            <GalleryGrid posts={filteredPosts} />
+        <GalleryGrid posts={filteredPosts} />
 
-            {/* Results count */}
-            <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-              {filteredPosts.length} yazı gösteriliyor
-            </p>
-          </div>
-        </div>
+        {/* Results count */}
+        <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+          {filteredPosts.length} yazı gösteriliyor
+        </p>
       </div>
     </>
   )
