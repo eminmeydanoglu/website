@@ -88,7 +88,7 @@ export default function GalleryLayout({ posts, title }: GalleryLayoutProps) {
   return (
     <>
       <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+        <h1 className="text-center text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-gray-100">
           {title}
         </h1>
       </div>
