@@ -105,7 +105,10 @@ export const Blog = defineDocumentType(() => ({
     draft: { type: 'boolean' },
     summary: { type: 'string' },
     images: { type: 'json' },
-    thumbnail: { type: 'string' }, // Add thumbnail field. String is path to image
+    thumbnail: { type: 'string' },
+    category: { type: 'string' },
+    icon: { type: 'string' },
+    featured: { type: 'boolean', default: false },
     authors: { type: 'list', of: { type: 'string' } },
     layout: { type: 'string' },
     bibliography: { type: 'string' },
