@@ -2,5 +2,9 @@
   "felsefe": 8,
   "düşünme": 1,
   "olasılık": 1,
-  "bilim": 1
+  "bilim": 1,
+  "machine-learning": 1,
+  "vision-transformer": 1,
+  "self-supervised-learning": 1,
+  "mae": 1
 }
