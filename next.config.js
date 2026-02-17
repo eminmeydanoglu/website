@@ -86,6 +86,20 @@ module.exports = () => {
         },
       ]
     },
+    async redirects() {
+      return [
+        {
+          source: '/blog',
+          destination: '/writings',
+          permanent: true,
+        },
+        {
+          source: '/blog/:path*',
+          destination: '/writings/:path*',
+          permanent: true,
+        },
+      ]
+    },
     webpack: (config, options) => {
       config.module.rules.push({
         test: /\.svg$/,

@@ -39,7 +39,7 @@ const CategoryBadge = ({ categoryId }: { categoryId: string }) => {
 }
 
 const PostCard = ({ title, slug, summary, thumbnail, category, date }: PostCardProps) => {
-  const href = `/blog/${slug}`
+  const href = `/writings/${slug}`
   const formattedDate = new Date(date).toLocaleDateString('tr-TR', {
     year: 'numeric',
     month: 'short',
