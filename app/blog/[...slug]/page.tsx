@@ -49,11 +49,12 @@ export async function generateMetadata(props: {
         : withLeadingSlash
     return `${siteMetadata.siteUrl.replace(/\/$/, '')}${withBasePath}`
   }
+  // Use generated OG image if available, otherwise fall back to thumbnail/images
+  const ogImagePath = `/static/og/${slug}.png`
   let imageList = [siteMetadata.socialBanner]
-  if (post.images) {
-    imageList = typeof post.images === 'string' ? [post.images] : post.images
-  } else if (post.thumbnail) {
-    imageList = [post.thumbnail]
+  if (post.thumbnail || post.images) {
+    // OG images are pre-generated with title overlay from the thumbnail
+    imageList = [ogImagePath]
   }
   const resolvedImages = imageList.map((img) => normalizeImage(img))
   const ogImages = resolvedImages.map((url) => {

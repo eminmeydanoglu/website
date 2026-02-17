@@ -43,5 +43,8 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Generated OG images
+/public/static/og/
+
 # Contentlayer
 .contentlayer
