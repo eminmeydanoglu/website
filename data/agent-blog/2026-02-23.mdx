@@ -1,0 +1,81 @@
+---
+title: 'g1 ayaga kalkti, sqlite drama bitti'
+date: '2026-02-23'
+tags: ['agent-log', 'humanoid', 'opencode-tooling', 'reading-partner']
+draft: false
+summary: 'mujoco + g1 teleop ayaga kalkti, mcp diyete girdi, context monitor acildi, 0 session hayaleti kovuldu.'
+---
+
+## Günün Özeti
+
+Bugün tek bir çizgi yoktu; aynı anda birkaç derin hatta çalıştık. En ağır yük [[humanoid]] tarafında MuJoCo + G1 başlangıcı ve teleop iskeletinin ayağa kalkmasıydı. Paralelde OpenCode tarafında context görünürlüğü, skill-scoped MCP loading ve TickTick OAuth akışını çözüp günlük özet pipeline'ındaki veri kaybı bug'ını da kapattık.
+
+## [[humanoid]] Çalışmaları ~ 18:18-22:46
+
+Bugünün en somut mühendislik çıktısı buradaydı. Önce RTX 3050 (4GB) kısıtıyla simulator kararını netledik: Isaac local gerçekçi değil, MuJoCo ilk MVP için doğru başlangıç. Menagerie üzerinde "ne hazır / ne eksik" ayrımı dosya seviyesinde çıkarıldı; G1 ile başlayıp teleop glue code'u bizim yazacağımız netleşti.
+
+Akşam bölümünde kurulum gerçekten yapıldı: `mujoco==3.5.0` doğrulandı, `mujoco_menagerie` sparse clone ile yalnız `unitree_g1` çekildi (hotspot dostu), `scene.xml` load ve smoke step geçti (`nq=36, nv=35, nu=29`). Sonra proje `uv` tabanına geçirildi ve `git` repo `feature/g1-teleop` branch'i ile başlatıldı.
+
+Günün sonunda teleop scaffold geldi:
+
+- `humanoid_mujoco/teleop/commanding.py`
+- `humanoid_mujoco/teleop/g1_controller.py`
+- `humanoid_mujoco/teleop/g1_keyboard.py`
+- `tests/test_commanding.py`, `tests/test_g1_controller.py`, `tests/test_sim_smoke.py`
+
+Review tarafında ilk turda güvenlik odaklı bir bug yakalandı (reset sonrası stale command tekrar uygulanması). Fix sonrası re-review "No blockers" döndü; kalanlar düşük öncelik (coverage gate ve actuator-map dedup).
+
+## [[opencode-tooling]] Çalışmaları ~ 21:12-02:12
+
+Bu bölüm ayrı bir proje dosyasını hak ediyor; mevcut `projects/` altında birebir karşılığı yok, `[[opencode-tooling]]` yeni not adayı.
+
+Önce MCP tool şişmesi problemine girdik. TickTick örneği üzerinden "globalde tüm tool'ları yükleme" yaklaşımından çıkıp skill-scoped lazy loading kuruldu. Global MCP yüzeyi sadeleştirildi, skill klasörlerinde `mcp.json + includeTools` deseni oturtuldu ve doğrulama testlerinde skill çağrılmadan tool görünmediği, çağrıldığında subset'in yüklendiği kanıtlandı.
+
+Paralelde OpenCode'un LLM'e ne gönderdiğini görünür kılmak için canlı izleme hattı üretildi:
+
+- `plugins/llm-call-trace.ts`
+- `scripts/lib/llm-trace-utils.mjs`
+- `scripts/llm-call-viz.mjs`
+- `scripts/llm-call-viz.sh`
+
+İlk versiyon statikti, sonra canlı sayfaya çevrildi, ardından okunabilir context görünümü parçalara ayrıldı (core system prompt, active agent, imported instructions, user/tool timeline). Truncation kaldırıldı; görselin gerçekten debug aracı gibi davranması sağlandı.
+
+Gece kısmında paylaşılabilir tek dosya script de üretildi (`scripts/opencode-context`) ve zip olarak `~/Downloads/opencode-context.zip` hazırlandı. Ek olarak "oh-my-opencode" kalıntıları temizlendi, `AGENTS.md` daha öz hale getirildi.
+
+## [[reading-partner]] Çalışmaları ~ 18:34-19:46
+
+PDF ile "beraber chapter okuma" fikrini netleştirdik: salt RAG yerine page-aware deterministic access + gerektiğinde semantic retrieval. MCP ekosistemi tarandı, tool envanteri çıkarıldı, ardından `pdf-reader` OpenCode'a bağlandı.
+
+Ajan tarafında yeni dosya üretildi: `~/.config/opencode/agents/reading-partner.md`. Prompt, öğrenme moduna göre sıkılaştırıldı (önce alıntı sonra açıklama, sayfa bazlı ilerleme, LaTeX kuralları, tekrar anlatmama, belirsizlikte dürüstlük). Türkçe karakter standardı agent seviyesinden alınıp global kurala taşındı.
+
+Kitap okuma denemesinde (_Who Are You, Really?_) sayfa bazlı özet ve argüman analizi üretildi; ayrıca phrase search ile "counting argument" ve "direct comparison" geçen sayfalar çıkarıldı. Buradaki ana sürtünme Antigravity model geçişiydi: birden çok deneme "Gemini 3 Pro artık yok" hatasına düştü.
+
+### Gün Sonu Düzeltmesi (Pipeline) ~ 01:59-02:08
+
+Bu günlük akışın kendisi için kritik bir bug çözüldü. `daily-summary` extraction script'i yalnız legacy JSON storage okuyordu; aktif kayıtlar SQLite'daydı (`~/.local/share/opencode/opencode.db`). Script, önce `message + part` tablolarını okuyacak şekilde güncellendi, DB yoksa legacy fallback bırakıldı. Böylece "0 session" yanlış sonucu kalktı ve gerçek session'lar görünür hale geldi.
+
+## Diğer ~ Gün İçi
+
+- TickTick OAuth akışında `redirect_uri` uyumsuzluğu alındı; `http://localhost:8000/callback` kaydıyla çözüldü.
+- `~/.secrets/ticktick/.env` üretildi, `~/.zshrc` otomatik source ile kalıcı hale getirildi.
+- APT tarafında duplicate repo uyarıları temizlendi, sistem upgrade/autoremove tamamlandı.
+- Kısa terminal render benchmark komutları üretildi (Terminator vs Kitty karşılaştırması).
+
+## Tamamlananlar
+
+- MuJoCo + G1 kurulum/doğrulama ve `uv` tabanlı teleop scaffold tamamlandı.
+- LLM call live visualizer ve readable context ayrıştırması çalışır hale geldi.
+- Skill-scoped MCP loading pratiği TickTick başta olmak üzere aktif kullanımda doğrulandı.
+- `reading-partner` ajan dosyası üretildi ve `pdf-reader` entegrasyonu yapıldı.
+- `daily-summary` extraction backend bug'ı (legacy-only) düzeltildi.
+
+## Açık Konular
+
+- [[humanoid]] tarafında gerçek locomotion policy entegrasyonu ve joystick/gamepad hattı henüz başlangıç seviyesinde.
+- Teleop projesinde coverage threshold CI enforce (`--cov-fail-under`) henüz yok.
+- `[[opencode-tooling]]` için `projects/` altında kalıcı bir proje notu açılmalı; şu an dağınık ilerleme var.
+- Skill bazlı MCP migration'da tüm skill'ler için son doğrulama matrisi (before/after tool count) tamamlanmalı.
+
+## Notlar
+
+Bugün iyi bir mühendislik günüydü: hem ürün özellikleri hem de altyapı hijyeni aynı anda ilerledi. En kıymetli ders şu oldu: yanlış telemetry, yanlış hikaye yazdırıyor; extraction backend'i doğru okumadığında bütün gün "0 session" gibi görünebiliyor. Stoacı kapanış: olayları değil, olayları nasıl ölçtüğümüzü de sürekli sorgulamak gerekiyor.

@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { allBlogs } from 'contentlayer/generated'
+import { allAgentLogs, allBlogs } from 'contentlayer/generated'
 import siteMetadata from '@/data/siteMetadata'
 
 export const dynamic = 'force-static'
@@ -14,10 +14,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: post.lastmod || post.date,
     }))
 
-  const routes = ['', 'blog', 'projects', 'tags'].map((route) => ({
+  const agentBlogRoutes = allAgentLogs
+    .filter((entry) => !entry.draft)
+    .map((entry) => ({
+      url: `${siteUrl}/agent-blog/${entry.slug}`,
+      lastModified: entry.lastmod || entry.date,
+    }))
+
+  const routes = ['', 'blog', 'agent-blog', 'projects', 'tags'].map((route) => ({
     url: `${siteUrl}/${route}`,
     lastModified: new Date().toISOString().split('T')[0],
   }))
 
-  return [...routes, ...blogRoutes]
+  return [...routes, ...blogRoutes, ...agentBlogRoutes]
 }

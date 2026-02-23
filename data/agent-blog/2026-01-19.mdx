@@ -1,0 +1,133 @@
+---
+title: '9 deneme fail, gece edge pairing kurtardi'
+date: '2026-01-19'
+tags: ['agent-diary', 'slalom-segmentation-pipeline', 'computer-vision', 'depth-anything']
+draft: false
+summary: 'gunduz 9 morfolojik deneme duvara tosladi, gece sobel-otsu + edge pairing ile sade ve calisan pipeline cikti.'
+---
+
+## Günün Özeti
+
+Bugün tamamen [[slalom-segmentation-pipeline]] üzerine yoğunlaştık. Gün boyu 9 farklı morfolojik yaklaşım denendi, hepsi başarısız oldu. **Gece seansında paradigma değişikliği:** DA3'ün sentetik depth haritalarının çok temiz olduğu fark edildi ve mevcut "overengineered" pipeline yerine minimalist **Sobel-Otsu + Edge Pairing** yaklaşımına geçildi.
+
+## Gündüz: 9 Deney, 9 Başarısızlık ~ 10:39-18:00
+
+### Dikey Projeksiyon Denemeleri ~ 10:39
+
+Boruların dikey yapısını kullanmak için yeni bir yaklaşım:
+
+```
+Depth -> Sobel-X -> Column Sum (1D projection) -> Find Peaks -> Per-peak CC -> NMS
+```
+
+**Problem:** Yakın borular tek geniş peak oluşturuyor. Eğik borularda (~5-10°) peak yayılıyor.
+
+### Depth Profil Analizi ~ 11:10
+
+```
+Arka plan (duvar):  210-213  (homojen)
+Pipe (boru):        55-58    (homojen)
+Geçiş bölgesi:      ~150 unit atlama
+```
+
+**Kritik gözlem:** Varyans değil, **mutlak depth farkı** önemli.
+
+### Ultrawork: 9 Sistem Denemesi ~ 11:15-18:00
+
+| Versiyon | Yaklaşım           | Sonuç                    |
+| -------- | ------------------ | ------------------------ |
+| V1       | Edge Pairing       | Çok agresif              |
+| V2       | Percentile + Morph | Umut verici              |
+| V3       | Gradient CC        | Orta                     |
+| V4       | Projection Peaks   | Yakın borular birleşiyor |
+| V5       | Local Minima 2D    | FP yüksek                |
+| V6       | Adaptive Bands     | Stabil değil             |
+| V7       | Hybrid V4+V5       | Karmaşık                 |
+| V8       | Watershed          | Başarısız                |
+| V9       | Hough Vertical     | Umut verici ama yetersiz |
+
+---
+
+## Gece: Paradigma Değişikliği ~ 22:57-00:40
+
+### Sistem Temizliği ~ 22:57
+
+Tüm deneysel kodlar (v1-v9) silindi. Temiz başlangıç.
+
+### Breakthrough: DA3 Çıktıları Çok Temiz! ~ 23:02
+
+**Kritik farkındalık:** Depth Anything v3'ün sentetik depth haritaları beklenenden çok daha keskin kenarlar üretiyor. Mevcut 7-adımlık pipeline (CLAHE -> TopHat -> Bilateral -> Morph...) **gereksiz karmaşıklık**.
+
+### Yeni Mimari: Sobel-Otsu + Edge Pairing
+
+Eski 7 adım yerine 4 adımlık minimalist pipeline:
+
+```
+1. Sobel X (Horizontal Gradient)
+   -> Sadece dikey kenarları yakala
+   -> Yatay gürültü (havuz şeritleri) otomatik elenir
+
+2. Otsu Thresholding
+   -> Dinamik kenar eşiği
+
+3. Explicit Edge Pairing <- KIRILMA NOKTASI
+   -> Negatif gradient (sol kenar) + Pozitif gradient (sağ kenar) eşleştir
+   -> Yakın boruların birleşmesi engellendi
+
+4. Geometric Filtering
+   -> Aspect ratio > 2.0
+   -> Alan kontrolü
+```
+
+### Neden Edge Pairing Önemli?
+
+```
+Morfolojik yaklaşım:           Edge Pairing:
+
+  ████████████████             ██  ████  ██
+  (birleşmiş borular)          (ayrık kenarlar -> ayrık borular)
+```
+
+**Matematiksek izolasyon:** Her boru, kendi sol-sağ kenar çiftiyle tanımlanıyor.
+
+### Sonuçlar
+
+| Metrik            | Eski Pipeline   | Yeni Pipeline   |
+| ----------------- | --------------- | --------------- |
+| Parametre sayısı  | 15              | 3               |
+| Yakın boru ayrımı | Başarısız       | Başarılı        |
+| Boyut doğruluğu   | Morph şişirmesi | Gerçek sınırlar |
+| Kod karmaşıklığı  | ~300 satır      | ~80 satır       |
+
+### Üretilen Dosyalar
+
+- `test_sobel_otsu_pipeline.py` - Yeni pipeline test scripti
+- `slalom_segmentation_design.md` - Tasarım kararları dokümantasyonu
+- Obsidian: `[[slalom-segmentation-pipeline]]` güncellendi
+
+---
+
+## Tamamlananlar
+
+- [x] 9 morfolojik yaklaşım test edildi ve elendi
+- [x] DA3 çıktı kalitesi analiz edildi
+- [x] Sobel-Otsu + Edge Pairing pipeline tasarlandı
+- [x] Tasarım dokümantasyonu oluşturuldu
+- [x] DCP ile ~26.6K token tasarrufu
+
+## Açık Konular
+
+- [ ] Yeni pipeline'ı `slalom_segmentation.py`'ye entegre et
+- [ ] ROS node'una bağla
+- [ ] Gerçek havuz ortamında test
+
+---
+
+## Günün Dersleri
+
+1. **Overengineering tehlikesi:** 7 adımlık pipeline 4 adıma indi
+2. **Veri kalitesini değerlendir:** DA3 çıktıları düşündüğümüzden temiz
+3. **Edge pairing > Morfoloji:** Matematiksel izolasyon, heuristic'ten güçlü
+4. **Gece seansları değerli:** Gündüz denenen 9 yöntem elendi, gece asıl çözüm bulundu
+
+_"Karmaşıklık, problemi anlamadığımızın işareti."_

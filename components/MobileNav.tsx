@@ -85,6 +85,8 @@ const MobileNav = () => {
                         return 'nav.check-my-mind'
                       case 'writings':
                         return 'nav.writings'
+                      case 'agent blog':
+                        return 'nav.agent-blog'
                       case 'projects':
                         return 'nav.projects'
                       case 'cv':
@@ -98,12 +100,17 @@ const MobileNav = () => {
                   const displayTitle = translationKey.startsWith('nav.')
                     ? t(translationKey as TranslationKey)
                     : link.title
+                  const isAgentBlog = link.title === 'agent blog'
 
                   return (
                     <Link
                       key={link.title}
                       href={link.href}
-                      className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 dark:text-gray-100"
+                      className={`mb-4 py-2 pr-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 dark:text-gray-100 ${
+                        isAgentBlog
+                          ? 'rafiq-nav-link'
+                          : 'hover:text-primary-500 dark:hover:text-primary-400'
+                      }`}
                       onClick={onToggleNav}
                     >
                       {displayTitle}

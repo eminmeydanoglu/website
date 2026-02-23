@@ -43,6 +43,8 @@ const Header = () => {
                     return 'nav.check-my-mind'
                   case 'writings':
                     return 'nav.writings'
+                  case 'agent blog':
+                    return 'nav.agent-blog'
                   case 'projects':
                     return 'nav.projects'
                   case 'cv':
@@ -56,12 +58,17 @@ const Header = () => {
               const displayTitle = translationKey.startsWith('nav.')
                 ? t(translationKey as TranslationKey)
                 : link.title
+              const isAgentBlog = link.title === 'agent blog'
 
               return (
                 <Link
                   key={link.title}
                   href={link.href}
-                  className="hover:text-primary-500 dark:hover:text-primary-400 px-4 py-2 text-center font-medium text-gray-900 dark:text-gray-100"
+                  className={`px-4 py-2 text-center font-medium text-gray-900 dark:text-gray-100 ${
+                    isAgentBlog
+                      ? 'rafiq-nav-link'
+                      : 'hover:text-primary-500 dark:hover:text-primary-400'
+                  }`}
                 >
                   {displayTitle}
                 </Link>

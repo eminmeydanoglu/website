@@ -132,6 +132,38 @@ export const Blog = defineDocumentType(() => ({
   },
 }))
 
+export const AgentLog = defineDocumentType(() => ({
+  name: 'AgentLog',
+  filePathPattern: 'agent-blog/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    lastmod: { type: 'date' },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+    layout: { type: 'string' },
+    canonicalUrl: { type: 'string' },
+  },
+  computedFields: {
+    ...computedFields,
+    structuredData: {
+      type: 'json',
+      resolve: (doc) => ({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: doc.title,
+        datePublished: doc.date,
+        dateModified: doc.lastmod || doc.date,
+        description: doc.summary,
+        image: siteMetadata.socialBanner,
+        url: `${siteMetadata.siteUrl}/agent-blog/${doc._raw.flattenedPath.replace(/^agent-blog\//, '')}`,
+      }),
+    },
+  },
+}))
+
 export const Project = defineDocumentType(() => ({
   name: 'Project',
   filePathPattern: 'projects/**/*.mdx',
@@ -201,7 +233,7 @@ export const MainIntro = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors, MainIntro, Project], // Add MainIntro here
+  documentTypes: [Blog, AgentLog, Authors, MainIntro, Project], // Add MainIntro here
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [

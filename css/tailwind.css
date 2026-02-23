@@ -7,11 +7,14 @@
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-sans: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  --font-sans:
+    var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace; /* Default to Mono */
-  --font-inter: var(--font-inter), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; /* Keep Inter available */
-  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  --font-inter:
+    var(--font-inter), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji'; /* Keep Inter available */
+  --font-mono:
+    var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace; /* Keep Mono available */
 
   /* Colors */
@@ -180,4 +183,103 @@ input:-webkit-autofill:focus {
 .linkicon {
   display: inline-block;
   vertical-align: middle;
+}
+
+@keyframes rafiqAurora {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.rafiq-hero-panel {
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.rafiq-nav-link {
+  transition: color 180ms ease;
+}
+
+.rafiq-nav-link:hover {
+  color: transparent;
+  background-image: linear-gradient(120deg, #047857 0%, #059669 35%, #10b981 70%, #34d399 100%);
+  background-size: 240% 240%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: rafiqAurora 4.5s ease-in-out infinite;
+}
+
+.dark .rafiq-nav-link:hover {
+  background-image: linear-gradient(120deg, #6ee7b7 0%, #34d399 35%, #10b981 68%, #a7f3d0 100%);
+}
+
+.rafiq-hero-panel:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px -26px color-mix(in oklab, var(--color-primary-700) 55%, transparent);
+  border-color: color-mix(in oklab, var(--color-primary-600) 30%, var(--color-gray-200));
+}
+
+.rafiq-glow-text {
+  color: transparent;
+  background-image: linear-gradient(120deg, #056d5b 0%, #089981 40%, #0fb68a 65%, #22c55e 100%);
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: rafiqAurora 10s ease-in-out infinite;
+}
+
+.rafiq-read-link {
+  color: #056d5b;
+  border: 1px solid rgba(6, 95, 70, 0.25);
+  background: linear-gradient(
+    120deg,
+    rgba(187, 247, 208, 0.45) 0%,
+    rgba(153, 246, 228, 0.32) 45%,
+    rgba(209, 250, 229, 0.56) 100%
+  );
+  background-size: 220% 220%;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px -10px rgba(4, 120, 87, 0.65);
+  transition:
+    transform 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+  animation: rafiqAurora 8s ease-in-out infinite;
+}
+
+.rafiq-read-link:hover {
+  transform: translateY(-1px);
+  color: #064e3b;
+  border-color: rgba(6, 95, 70, 0.45);
+  box-shadow: 0 10px 24px -14px rgba(4, 120, 87, 0.7);
+}
+
+.dark .rafiq-read-link {
+  color: #a7f3d0;
+  border-color: rgba(16, 185, 129, 0.42);
+  background: linear-gradient(
+    120deg,
+    rgba(4, 120, 87, 0.25) 0%,
+    rgba(6, 95, 70, 0.4) 50%,
+    rgba(16, 185, 129, 0.24) 100%
+  );
+  box-shadow: 0 6px 18px -12px rgba(16, 185, 129, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rafiq-hero-panel,
+  .rafiq-glow-text,
+  .rafiq-read-link {
+    animation: none;
+    transition: none;
+  }
 }

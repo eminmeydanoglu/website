@@ -18,6 +18,7 @@ export const translations = {
     // Navigation
     'nav.home': 'Ana Sayfa',
     'nav.writings': 'yazılar',
+    'nav.agent-blog': 'ajan günlüğü',
     'nav.projects': 'projeler',
     'nav.cv': 'özgeçmiş',
     'nav.check-my-mind': 'zihnime göz at',
@@ -67,6 +68,7 @@ export const translations = {
     // Navigation
     'nav.home': 'Home',
     'nav.writings': 'writings',
+    'nav.agent-blog': 'agent blog',
     'nav.projects': 'projects',
     'nav.cv': 'cv',
     'nav.check-my-mind': 'check my mind',
