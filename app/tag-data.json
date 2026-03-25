@@ -1,10 +1,13 @@
 {
-  "felsefe": 9,
-  "düşünme": 1,
+  "eleştirel-düşünme": 2,
+  "psikoloji": 6,
+  "yaşam-felsefesi": 3,
   "olasılık": 1,
-  "bilim": 1,
+  "ilişkiler": 4,
+  "aşk": 1,
   "machine-learning": 1,
   "vision-transformer": 1,
   "self-supervised-learning": 1,
-  "mae": 1
+  "sokrates-diyalogu": 1,
+  "ontoloji": 1
 }

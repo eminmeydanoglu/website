@@ -1,5 +1,6 @@
 import PostCard from './PostCard'
 import type { Blog } from 'contentlayer/generated'
+import { getPostTags } from '@/lib/post-tags'
 
 interface GalleryGridProps {
   posts: Blog[]
@@ -27,10 +28,9 @@ const GalleryGrid = ({ posts }: GalleryGridProps) => {
           slug={post.slug}
           summary={post.summary}
           thumbnail={post.thumbnail}
-          category={post.category}
           icon={post.icon}
           date={post.date}
-          tags={post.tags}
+          tags={getPostTags(post)}
         />
       ))}
     </div>

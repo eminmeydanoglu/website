@@ -1,44 +1,18 @@
 import Image from './Image'
 import Link from './Link'
-import { getCategoryById } from '@/data/categories'
+import { formatTagLabel } from '@/lib/post-tags'
 
 interface PostCardProps {
   title: string
   slug: string
   summary?: string
   thumbnail?: string
-  category?: string
   icon?: string
   date: string
   tags?: string[]
 }
 
-const CategoryBadge = ({ categoryId }: { categoryId: string }) => {
-  const category = getCategoryById(categoryId)
-  if (!category) return null
-
-  const colorClasses: Record<string, string> = {
-    blue: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-    green: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-    purple: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-    orange: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-    red: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-    yellow: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-    pink: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
-    teal: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
-    gray: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
-  }
-
-  return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClasses[category.color] || colorClasses.gray}`}
-    >
-      {category.label}
-    </span>
-  )
-}
-
-const PostCard = ({ title, slug, summary, thumbnail, category, date }: PostCardProps) => {
+const PostCard = ({ title, slug, summary, thumbnail, date, tags = [] }: PostCardProps) => {
   const href = `/writings/${slug}`
   const formattedDate = new Date(date).toLocaleDateString('tr-TR', {
     year: 'numeric',
@@ -70,26 +44,29 @@ const PostCard = ({ title, slug, summary, thumbnail, category, date }: PostCardP
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
-        {/* Title */}
         <h2 className="mb-2 text-xl leading-snug font-bold tracking-tight text-gray-900 dark:text-gray-100">
           <Link href={href} className="hover:text-primary-500 dark:hover:text-primary-400">
             {title}
           </Link>
         </h2>
 
-        {/* Category badge */}
-        {category && (
-          <div className="mb-2">
-            <CategoryBadge categoryId={category} />
+        {tags.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300 inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium"
+              >
+                {formatTagLabel(tag)}
+              </span>
+            ))}
           </div>
         )}
 
-        {/* Summary */}
         {summary && (
           <p className="mb-3 flex-1 text-sm text-gray-600 dark:text-gray-400">{summary}</p>
         )}
 
-        {/* Date */}
         <time className="text-xs text-gray-500 dark:text-gray-500" dateTime={date}>
           {formattedDate}
         </time>
