@@ -8,7 +8,7 @@ Personal website for Emin Meydanoğlu (meydanoglu.com).
 - **Styling:** Tailwind CSS 4
 - **Content:** Contentlayer2 (MDX blog posts)
 - **Package Manager:** Yarn 3.6.1
-- **Deployment:** GitHub Pages (static export)
+- **Deployment:** Vercel (auto-deploys `main` of `eminmeydanoglu/website`; meydanoglu.com DNS → Vercel). The `pages.yml` GitHub Pages workflow is vestigial — Actions have never run on this repo. `eminmeydanoglu/eminmeydanoglu.github.io` is a separate legacy-Pages repo used for one-off static pages (e.g. soru27-cozum), not the main site.
 
 ## Project Structure
 
