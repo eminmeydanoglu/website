@@ -4,6 +4,7 @@ import { ReactNode } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog, Authors } from 'contentlayer/generated'
 import Image from '@/components/Image'
+import PostNavFooter from '@/components/PostNavFooter'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import siteMetadata from '@/data/siteMetadata'
 
@@ -17,12 +18,12 @@ const postDateTemplate: Intl.DateTimeFormatOptions = {
 interface LayoutProps {
   content: CoreContent<Blog>
   authorDetails: CoreContent<Authors>[]
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
+  next?: { path: string; slug: string; title: string }
+  prev?: { path: string; slug: string; title: string }
   children: ReactNode
 }
 
-export default function PostLayout({ content, children }: LayoutProps) {
+export default function PostLayout({ content, next, prev, children }: LayoutProps) {
   const { date, title, thumbnail } = content
 
   return (
@@ -36,21 +37,25 @@ export default function PostLayout({ content, children }: LayoutProps) {
           </div>
         )}
 
-        {/* Header */}
-        <header className="mb-8 text-center">
+        {/* Header — mono meta per DESIGN.md type roles */}
+        <header className="mb-10 text-center">
           <time
             dateTime={date}
-            className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400"
+            className="text-ink/60 dark:text-ink-dark/60 font-mono text-xs tracking-widest lowercase"
           >
             {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
           </time>
-          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl md:text-5xl dark:text-gray-100">
+          <h1 className="font-display text-ink dark:text-ink-dark mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
             {title}
           </h1>
         </header>
 
-        {/* Content */}
-        <div className="prose prose-lg dark:prose-invert mx-auto max-w-none">{children}</div>
+        {/* Content — readable measure: the typography plugin's 65ch default
+            (60-75 chars per readable-measure skill), centered. */}
+        <div className="prose prose-lg dark:prose-invert mx-auto">{children}</div>
+
+        {/* Prev/next — hairline-separated editorial footer */}
+        <PostNavFooter next={next} prev={prev} />
       </article>
     </>
   )

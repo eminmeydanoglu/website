@@ -4,32 +4,49 @@
 @source '../node_modules/pliny';
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Core theme configuration */
+/* Core theme configuration — Editorial Pastel (see design-drafts/DESIGN.md) */
 @theme {
   /* Font families */
   --font-sans:
-    var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace; /* Default to Mono */
+    var(--font-inter), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji'; /* UI chrome */
   --font-inter:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol', 'Noto Color Emoji'; /* Keep Inter available */
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-display:
+    var(--font-playfair), 'Playfair Display', Georgia, 'Times New Roman', serif; /* card titles, headings */
+  --font-serif:
+    var(--font-newsreader), 'Newsreader', Georgia, 'Times New Roman', serif; /* longform prose */
   --font-mono:
     var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace; /* Keep Mono available */
+    'Liberation Mono', 'Courier New', monospace; /* meta, nav, labels */
+
+  /* Editorial paper/ink */
+  --color-paper: #fff7f4;
+  --color-ink: #141414;
+  --color-paper-dark: #1b1613;
+  --color-ink-dark: #f4ebe5;
+
+  /* Story panel tints (snapped from cover art — never raw-extract) */
+  --color-tint-mint: #cee0dc;
+  --color-tint-yellow: #f4d06f;
+  --color-tint-blue: #b8cbe8;
+  --color-tint-blush: #f6d8ce;
+  --color-tint-lavender: #ddd3ea;
 
   /* Colors */
-  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
-  --color-primary-50: oklch(0.971 0.014 343.198);
-  --color-primary-100: oklch(0.948 0.028 342.258);
-  --color-primary-200: oklch(0.899 0.061 343.231);
-  --color-primary-300: oklch(0.823 0.12 346.018);
-  --color-primary-400: oklch(0.718 0.202 349.761);
-  --color-primary-500: oklch(0.656 0.241 354.308);
-  --color-primary-600: oklch(0.592 0.249 0.584);
-  --color-primary-700: oklch(0.525 0.223 3.958);
-  --color-primary-800: oklch(0.459 0.187 3.815);
-  --color-primary-900: oklch(0.408 0.153 2.432);
-  --color-primary-950: oklch(0.284 0.109 3.907);
+  /* Accent: editorial sage, interactive use only (links, focus) */
+  --color-primary-50: oklch(0.96 0.02 165);
+  --color-primary-100: oklch(0.92 0.03 165);
+  --color-primary-200: oklch(0.84 0.05 165);
+  --color-primary-300: oklch(0.74 0.07 166);
+  --color-primary-400: oklch(0.62 0.09 168);
+  --color-primary-500: oklch(0.52 0.09 170);
+  --color-primary-600: oklch(0.45 0.08 170);
+  --color-primary-700: oklch(0.38 0.07 170);
+  --color-primary-800: oklch(0.32 0.06 170);
+  --color-primary-900: oklch(0.27 0.05 170);
+  --color-primary-950: oklch(0.2 0.04 170);
 
   --color-gray-50: oklch(0.985 0.002 247.839);
   --color-gray-100: oklch(0.967 0.003 264.542);
@@ -83,11 +100,23 @@
     border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
   }
+
+  /* Editorial selection: tint-yellow highlight, ink text (DESIGN.md tints) */
+  ::selection {
+    background-color: var(--color-tint-yellow);
+    color: var(--color-ink);
+  }
+
+  /* Dark variant: yellow toned toward paper-dark to cut the glare */
+  .dark ::selection {
+    background-color: color-mix(in oklab, var(--color-tint-yellow) 82%, var(--color-paper-dark));
+    color: var(--color-ink);
+  }
 }
 
 @layer utilities {
   .prose {
-    font-family: var(--font-inter); /* Apply Inter to all prose content */
+    font-family: var(--font-newsreader), 'Newsreader', Georgia, serif; /* Editorial longform */
     & a {
       color: var(--color-primary-500);
       &:hover {
@@ -97,18 +126,14 @@
         color: var(--color-primary-400);
       }
     }
-    /* Remove specific header overrides within prose, they will now inherit Inter */
     & :where(h1, h2, h3) {
-      /* font-family: var(--font-mono); */ /* Removed */
+      font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
       font-weight: 700;
       letter-spacing: var(--tracking-tight);
     }
     & :where(h4, h5, h6) {
       /* font-family: var(--font-mono); */ /* Removed */
       font-weight: 600;
-    }
-    & :where(code):not(pre code) {
-      color: var(--color-indigo-500);
     }
   }
 
@@ -128,6 +153,138 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Editorial longform layer (see design-drafts/DESIGN.md)
+   Playfair display headings, Newsreader prose, 1px ink hairlines — no gray.
+   Dark variants key off .dark on <html> (next-themes).
+--------------------------------------------------------------------------- */
+@layer utilities {
+  .prose {
+    /* Heading scale (typography-scale skill): with prose-lg body at 18px,
+       h3 = 1.167em ≈ 21px and h2 = 1.778em ≈ 32px — a clear 1.5x distinction.
+       em-based, so plain .prose (16px) keeps the same ratio. */
+    & :where(h2) {
+      font-size: 1.778em;
+      line-height: 1.25;
+      margin-top: 2.25em;
+      margin-bottom: 0.75em;
+    }
+    & :where(h3) {
+      font-size: 1.167em;
+      line-height: 1.35;
+      margin-top: 2em;
+      margin-bottom: 0.5em;
+    }
+
+    /* Pull quotes: larger Newsreader italic, 2px ink bar, generous air
+       (readable-measure: callouts sit inside the same 65ch measure).
+       .markdown-alert excluded — that is remark-github-blockquote-alert UI. */
+    & :where(blockquote):not(.markdown-alert) {
+      font-size: 1.125em;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--color-ink);
+      border-left-width: 2px;
+      border-left-color: var(--color-ink);
+      quotes: none;
+      padding-left: 1.5em;
+      margin-top: 2.5em;
+      margin-bottom: 2.5em;
+    }
+
+    /* Section rules: 1px ink/20 hairline with vertical spacing. */
+    & :where(hr) {
+      border: 0;
+      height: 1px;
+      background-color: color-mix(in oklab, var(--color-ink) 20%, transparent);
+      margin-top: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Inline code: ink with a hairline underline instead of template indigo.
+       :not(:where(...)) keeps specificity below `.prose a code` so code
+       inside links stays sage. */
+    & :where(code):not(:where(pre code)) {
+      color: var(--color-ink);
+      font-weight: 400;
+      text-decoration: underline;
+      text-decoration-color: color-mix(in oklab, var(--color-ink) 35%, transparent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+      &::before,
+      &::after {
+        content: none; /* drop the typography plugin's backtick pseudo-quotes */
+      }
+    }
+  }
+
+  /* Drop cap on the first paragraph of the article body: Playfair, ~3 lines
+     of wrapped text (prose-lg line ≈ 32px; float box ≈ 80px tall). */
+  .prose > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+    font-size: 5.25em;
+    font-weight: 700;
+    line-height: 0.8;
+    padding-top: 0.05em;
+    padding-right: 0.14em;
+    color: var(--color-ink);
+  }
+
+  /* Dark-mode editorial variants */
+  .dark .prose {
+    & :where(blockquote):not(.markdown-alert) {
+      color: var(--color-ink-dark);
+      border-left-color: var(--color-ink-dark);
+    }
+    & :where(hr) {
+      background-color: color-mix(in oklab, var(--color-ink-dark) 20%, transparent);
+    }
+    & :where(code):not(:where(pre code)) {
+      color: var(--color-ink-dark);
+      text-decoration-color: color-mix(in oklab, var(--color-ink-dark) 40%, transparent);
+    }
+  }
+
+  .dark .prose > p:first-of-type::first-letter {
+    color: var(--color-ink-dark);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Editorial motion (motion-design skill): restrained ease-out entrances,
+   150-250ms, opacity + small translate, prefers-reduced-motion opt-out.
+--------------------------------------------------------------------------- */
+@keyframes editorialFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  /* Soft page fade-in, applied to <main> in app/layout.tsx */
+  .editorial-page-enter {
+    animation: editorialFadeIn 240ms ease-out both;
+  }
+
+  /* Smooth the hover-zoom easing on grouped card images (EditorialCard uses
+     group + group-hover:scale-[1.03]); only refines the easing curve. */
+  .group img {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page-enter {
+    animation: none;
+  }
+}
+
 .task-list-item::before {
   @apply hidden;
 }
@@ -137,11 +294,13 @@
 }
 
 .footnotes {
-  @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
+  /* meta register: smaller size, ink hairline instead of gray (DESIGN.md) */
+  @apply border-ink/20 dark:border-ink-dark/20 mt-12 border-t pt-6 text-[0.8125em];
 }
 
 .data-footnote-backref {
   @apply no-underline;
+  font-family: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .csl-entry {
@@ -197,13 +356,6 @@ input:-webkit-autofill:focus {
   }
 }
 
-.rafiq-hero-panel {
-  transition:
-    transform 220ms ease,
-    box-shadow 220ms ease,
-    border-color 220ms ease;
-}
-
 .rafiq-nav-link {
   transition: color 180ms ease;
 }
@@ -221,64 +373,8 @@ input:-webkit-autofill:focus {
   background-image: linear-gradient(120deg, #6ee7b7 0%, #34d399 35%, #10b981 68%, #a7f3d0 100%);
 }
 
-.rafiq-hero-panel:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 40px -26px color-mix(in oklab, var(--color-primary-700) 55%, transparent);
-  border-color: color-mix(in oklab, var(--color-primary-600) 30%, var(--color-gray-200));
-}
-
-.rafiq-glow-text {
-  color: transparent;
-  background-image: linear-gradient(120deg, #056d5b 0%, #089981 40%, #0fb68a 65%, #22c55e 100%);
-  background-size: 220% 220%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: rafiqAurora 10s ease-in-out infinite;
-}
-
-.rafiq-read-link {
-  color: #056d5b;
-  border: 1px solid rgba(6, 95, 70, 0.25);
-  background: linear-gradient(
-    120deg,
-    rgba(187, 247, 208, 0.45) 0%,
-    rgba(153, 246, 228, 0.32) 45%,
-    rgba(209, 250, 229, 0.56) 100%
-  );
-  background-size: 220% 220%;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 4px 14px -10px rgba(4, 120, 87, 0.65);
-  transition:
-    transform 200ms ease,
-    color 200ms ease,
-    border-color 200ms ease,
-    box-shadow 200ms ease;
-  animation: rafiqAurora 8s ease-in-out infinite;
-}
-
-.rafiq-read-link:hover {
-  transform: translateY(-1px);
-  color: #064e3b;
-  border-color: rgba(6, 95, 70, 0.45);
-  box-shadow: 0 10px 24px -14px rgba(4, 120, 87, 0.7);
-}
-
-.dark .rafiq-read-link {
-  color: #a7f3d0;
-  border-color: rgba(16, 185, 129, 0.42);
-  background: linear-gradient(
-    120deg,
-    rgba(4, 120, 87, 0.25) 0%,
-    rgba(6, 95, 70, 0.4) 50%,
-    rgba(16, 185, 129, 0.24) 100%
-  );
-  box-shadow: 0 6px 18px -12px rgba(16, 185, 129, 0.6);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .rafiq-hero-panel,
-  .rafiq-glow-text,
-  .rafiq-read-link {
+  .rafiq-nav-link {
     animation: none;
     transition: none;
   }

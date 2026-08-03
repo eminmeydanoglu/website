@@ -10,7 +10,8 @@ import { getPostTags } from '@/lib/post-tags'
 
 interface GalleryLayoutProps {
   posts: Blog[]
-  title: string
+  /** Section heading — omitted on the homepage. */
+  title?: string
 }
 
 export default function GalleryLayout({ posts, title }: GalleryLayoutProps) {
@@ -123,13 +124,15 @@ export default function GalleryLayout({ posts, title }: GalleryLayoutProps) {
 
   return (
     <>
-      <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-        <h1 className="text-center text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-gray-100">
-          {title}
-        </h1>
-      </div>
+      {title && (
+        <div className="pt-2 pb-6">
+          <h1 className="text-ink/70 dark:text-ink-dark/70 font-mono text-sm tracking-[0.25em] uppercase">
+            {title}
+          </h1>
+        </div>
+      )}
 
-      <div className="border-t border-gray-200 py-8 dark:border-gray-700">
+      <div className="border-ink/80 dark:border-ink-dark/30 border-t py-10">
         <FilterBar
           availableTags={availableTags}
           selectedTags={selectedTags}
@@ -142,11 +145,6 @@ export default function GalleryLayout({ posts, title }: GalleryLayoutProps) {
         />
 
         <GalleryGrid posts={filteredPosts} />
-
-        {/* Results count */}
-        <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-          {filteredPosts.length} yazı gösteriliyor
-        </p>
       </div>
     </>
   )

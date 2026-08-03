@@ -1,9 +1,11 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
+import Image from '@/components/Image'
 import Link from '@/components/Link'
 import { components } from '@/components/MDXComponents'
 import siteMetadata from '@/data/siteMetadata'
+import { formatTagLabel } from '@/lib/post-tags'
 import { allAgentLogs } from 'contentlayer/generated'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -78,28 +80,35 @@ export default async function AgentBlogEntryPage(props: { params: Promise<{ slug
 
   return (
     <article className="mx-auto max-w-4xl pb-16">
-      <header className="mb-10 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-        <p className="text-sm font-semibold tracking-[0.18em] text-emerald-700 uppercase dark:text-emerald-300">
+      {/* Cover Image - same treatment as regular posts (see layouts/PostLayout) */}
+      {entry.thumbnail && (
+        <div className="relative -mx-4 mb-8 h-64 overflow-hidden sm:-mx-6 sm:h-80 md:h-96 lg:-mx-8">
+          <Image src={entry.thumbnail} alt={entry.title} fill className="object-cover" priority />
+        </div>
+      )}
+
+      <header className="border-ink/80 dark:border-ink-dark/30 mb-10 border-b pb-10">
+        <p className="text-ink/70 dark:text-ink-dark/70 font-mono text-xs tracking-[0.25em] uppercase">
           rafiq log
         </p>
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-gray-100">
+        <h1 className="font-display mt-3 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl md:text-5xl dark:text-gray-100">
           {entry.title}
         </h1>
-        <time className="mt-4 block text-sm text-gray-500 dark:text-gray-400" dateTime={entry.date}>
+        <time
+          className="mt-4 block font-mono text-xs tracking-widest text-gray-500 lowercase dark:text-gray-400"
+          dateTime={entry.date}
+        >
           {formatDate(entry.date, siteMetadata.locale)}
         </time>
         {entry.summary && (
-          <p className="mt-4 text-base text-gray-600 dark:text-gray-300">{entry.summary}</p>
+          <p className="mt-4 max-w-2xl font-serif text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+            {entry.summary}
+          </p>
         )}
         {entry.tags && entry.tags.length > 0 && (
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="text-ink/70 dark:text-ink-dark/70 mt-5 flex flex-wrap gap-3 font-mono text-[11px] tracking-widest uppercase">
             {entry.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 dark:border-gray-600 dark:text-gray-300"
-              >
-                {tag}
-              </span>
+              <span key={tag}>{formatTagLabel(tag)}</span>
             ))}
           </div>
         )}
@@ -109,7 +118,7 @@ export default async function AgentBlogEntryPage(props: { params: Promise<{ slug
         <MDXLayoutRenderer code={entry.body.code} components={components} toc={entry.toc} />
       </div>
 
-      <footer className="mt-14 border-t border-gray-200 pt-6 dark:border-gray-700">
+      <footer className="border-ink/80 dark:border-ink-dark/30 mt-14 border-t pt-6">
         <div className="flex flex-col gap-3 text-sm font-medium sm:flex-row sm:justify-between">
           <div>
             {previous ? (

@@ -51,6 +51,10 @@ export const translations = {
     'ui.search': 'Ara',
     'ui.search-placeholder': 'Yazı ara...',
 
+    // Post navigation
+    'post.previous': 'Önceki',
+    'post.next': 'Sonraki',
+
     // Pages
     'page.blog': 'Yazılar',
     'page.projects': 'Projeler',
@@ -100,6 +104,10 @@ export const translations = {
     'ui.no-posts': 'No posts found.',
     'ui.search': 'Search',
     'ui.search-placeholder': 'Search articles...',
+
+    // Post navigation
+    'post.previous': 'Previous',
+    'post.next': 'Next',
 
     // Pages
     'page.blog': 'Writings',

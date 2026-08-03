@@ -7,27 +7,25 @@ import { useTranslation } from '@/lib/LanguageContext'
 export default function Projects() {
   const { t } = useTranslation()
   return (
-    <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            {t('page.projects')}
-          </h1>
-        </div>
-        <div className="container py-12">
-          <div className="-m-4 flex flex-wrap">
-            {projectsData.map((d) => (
-              <Card
-                key={d.title}
-                title={d.title}
-                description={d.description}
-                imgSrc={d.imgSrc}
-                href={d.href}
-              />
-            ))}
-          </div>
+    <div className="pt-2">
+      <div className="pb-6">
+        <h1 className="text-ink/70 dark:text-ink-dark/70 font-mono text-sm tracking-[0.25em] uppercase">
+          {t('page.projects')}
+        </h1>
+      </div>
+      <div className="border-ink/80 dark:border-ink-dark/30 border-t py-10">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          {projectsData.map((d) => (
+            <Card
+              key={d.title}
+              title={d.title}
+              description={d.description}
+              imgSrc={d.imgSrc}
+              href={d.href}
+            />
+          ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }

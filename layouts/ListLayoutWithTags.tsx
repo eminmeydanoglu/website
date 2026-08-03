@@ -30,16 +30,17 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   const basePath = pathname
     .replace(/^\//, '') // Remove leading slash
     .replace(/\/page\/\d+$/, '') // Remove any trailing /page
-  console.log(pathname)
-  console.log(basePath)
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-      <nav className="flex justify-between">
+    <div className="border-ink/20 dark:border-ink-dark/20 border-t pt-6 pb-8">
+      <nav className="flex justify-between font-mono text-xs tracking-widest uppercase">
         {!prevPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
+          <button
+            className="text-ink/40 dark:text-ink-dark/40 cursor-auto disabled:opacity-50"
+            disabled={!prevPage}
+          >
             Previous
           </button>
         )}
@@ -47,20 +48,28 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           <Link
             href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
             rel="prev"
+            className="text-ink hover:text-primary-500 dark:text-ink-dark dark:hover:text-primary-400"
           >
             Previous
           </Link>
         )}
-        <span>
+        <span className="text-ink/50 dark:text-ink-dark/50">
           {currentPage} of {totalPages}
         </span>
         {!nextPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
+          <button
+            className="text-ink/40 dark:text-ink-dark/40 cursor-auto disabled:opacity-50"
+            disabled={!nextPage}
+          >
             Next
           </button>
         )}
         {nextPage && (
-          <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
+          <Link
+            href={`/${basePath}/page/${currentPage + 1}`}
+            rel="next"
+            className="text-ink hover:text-primary-500 dark:text-ink-dark dark:hover:text-primary-400"
+          >
             Next
           </Link>
         )}
@@ -84,21 +93,23 @@ export default function ListLayoutWithTags({
 
   return (
     <>
-      <div>
-        <div className="pt-6 pb-6">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+      <div className="pt-2">
+        <div className="pb-6">
+          <h1 className="text-ink/70 dark:text-ink-dark/70 font-mono text-sm tracking-[0.25em] uppercase">
             {title}
           </h1>
         </div>
-        <div className="flex sm:space-x-24">
-          <div className="hidden h-full max-h-screen max-w-[280px] min-w-[280px] flex-wrap overflow-auto rounded-sm bg-gray-50 pt-5 shadow-md sm:flex dark:bg-gray-900/70 dark:shadow-gray-800/40">
+        <div className="border-ink/80 dark:border-ink-dark/30 flex border-t py-10 sm:space-x-24">
+          <div className="border-ink/20 dark:border-ink-dark/20 hidden h-full max-h-screen max-w-[280px] min-w-[280px] flex-wrap overflow-auto rounded-none border pt-5 sm:flex">
             <div className="px-6 py-4">
               {pathname.startsWith('/writings') ? (
-                <h3 className="text-primary-500 font-bold">By tags</h3>
+                <h3 className="text-primary-500 font-mono text-[11px] font-bold tracking-widest uppercase">
+                  By tags
+                </h3>
               ) : (
                 <Link
                   href={`/writings`}
-                  className="hover:text-primary-500 dark:hover:text-primary-500 font-bold text-gray-700 dark:text-gray-300"
+                  className="text-ink/60 hover:text-primary-500 dark:text-ink-dark/60 dark:hover:text-primary-400 font-mono text-[11px] font-bold tracking-widest uppercase"
                 >
                   By tags
                 </Link>
@@ -108,13 +119,13 @@ export default function ListLayoutWithTags({
                   return (
                     <li key={t} className="my-3">
                       {decodeURI(pathname.split('/tags/')[1]) === slug(t) ? (
-                        <h3 className="text-primary-500 inline px-3 py-2 text-sm font-bold">
+                        <h3 className="text-primary-500 inline px-3 py-2 font-mono text-xs font-bold tracking-wide">
                           {`${t.toLowerCase()} (${tagCounts[t]})`}
                         </h3>
                       ) : (
                         <Link
                           href={`/tags/${slug(t)}`}
-                          className="hover:text-primary-500 dark:hover:text-primary-500 px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300"
+                          className="text-ink/60 hover:text-primary-500 dark:text-ink-dark/60 dark:hover:text-primary-400 px-3 py-2 font-mono text-xs tracking-wide"
                           aria-label={`View posts tagged ${t}`}
                         >
                           {`${t.toLowerCase()} (${tagCounts[t]})`}
@@ -126,12 +137,12 @@ export default function ListLayoutWithTags({
               </ul>
             </div>
           </div>
-          <div>
-            <ul>
+          <div className="flex-1">
+            <ul className="divide-ink/20 dark:divide-ink-dark/20 divide-y">
               {displayPosts.map((post) => {
                 const { path, date, title, summary, tags, thumbnail } = post // Destructure thumbnail
                 return (
-                  <li key={path} className="py-5">
+                  <li key={path} className="py-6 first:pt-0">
                     {/* Use flexbox for layout */}
                     <article className="flex flex-col space-y-2 xl:flex-row xl:items-center xl:space-y-0 xl:space-x-6">
                       {' '}
@@ -145,7 +156,7 @@ export default function ListLayoutWithTags({
                               alt="" // Alt text can be improved if descriptions are available
                               width={160} // Example width
                               height={90} // Example height based on 16:9 aspect ratio
-                              className="rounded-md object-cover"
+                              className="border-ink/20 dark:border-ink-dark/20 rounded-none border object-cover"
                             />
                           </Link>
                         </div>
@@ -154,13 +165,24 @@ export default function ListLayoutWithTags({
                         {' '}
                         {/* Wrap text content */}
                         {/* Reordered Elements Start */}
-                        <h2 className="text-2xl leading-8 font-bold tracking-tight">
-                          <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
+                        <h2 className="font-display text-2xl leading-tight font-bold">
+                          <Link
+                            href={`/${path}`}
+                            className="text-ink dark:text-ink-dark hover:underline"
+                          >
                             {title}
                           </Link>
                         </h2>
                         {''}
-                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                        <dl>
+                          <dt className="sr-only">Published on</dt>
+                          <dd className="text-ink/50 dark:text-ink-dark/50 font-mono text-[11px] tracking-widest lowercase">
+                            <time dateTime={date} suppressHydrationWarning>
+                              {formatDate(date, siteMetadata.locale)}
+                            </time>
+                          </dd>
+                        </dl>
+                        <div className="text-ink/70 dark:text-ink-dark/70 font-serif text-[15px] leading-relaxed">
                           {summary}
                         </div>
                         <div className="flex flex-wrap">
@@ -168,14 +190,6 @@ export default function ListLayoutWithTags({
                             <Tag key={tag} text={tag} />
                           ))}
                         </div>
-                        <dl>
-                          <dt className="sr-only">Published on</dt>
-                          <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
-                            <time dateTime={date} suppressHydrationWarning>
-                              {formatDate(date, siteMetadata.locale)}
-                            </time>
-                          </dd>
-                        </dl>
                         {''}
                         {/* Reordered Elements End */}
                       </div>{' '}

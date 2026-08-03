@@ -54,10 +54,10 @@ const FilterBar = ({
             placeholder="Yazılarda ara..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="focus:border-primary-500 focus:ring-primary-500 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 pl-10 text-sm text-gray-900 placeholder-gray-500 focus:ring-1 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
+            className="border-ink/40 text-ink focus:border-primary-500 focus:ring-primary-500 dark:border-ink-dark/40 dark:text-ink-dark w-full rounded-none border bg-transparent px-4 py-2.5 pl-10 font-mono text-xs tracking-wide placeholder-gray-500 focus:ring-1 dark:placeholder-gray-400"
           />
           <svg
-            className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400"
+            className="text-ink/50 dark:text-ink-dark/50 absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -74,7 +74,7 @@ const FilterBar = ({
         <div className="relative">
           <button
             onClick={() => setTagOpen(!tagOpen)}
-            className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            className="border-ink/40 text-ink hover:bg-ink/5 dark:border-ink-dark/40 dark:text-ink-dark dark:hover:bg-ink-dark/10 flex items-center gap-2 rounded-none border bg-transparent px-4 py-2.5 font-mono text-xs tracking-wide"
           >
             <span>Etiketler: {selectedTagLabel}</span>
             <svg
@@ -93,16 +93,16 @@ const FilterBar = ({
           </button>
 
           {tagOpen && (
-            <div className="absolute top-full left-0 z-10 mt-1 max-h-72 w-64 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+            <div className="border-ink/40 bg-paper dark:border-ink-dark/40 dark:bg-paper-dark absolute top-full left-0 z-10 mt-1 max-h-72 w-64 overflow-y-auto rounded-none border py-1 shadow-lg">
               <button
                 onClick={() => {
                   selectedTags.forEach((tag) => onTagToggle(tag))
                   setTagOpen(false)
                 }}
-                className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                className={`hover:bg-ink/5 dark:hover:bg-ink-dark/10 w-full px-4 py-2 text-left font-mono text-xs tracking-wide ${
                   selectedTags.length === 0
                     ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400'
-                    : 'text-gray-700 dark:text-gray-300'
+                    : 'text-ink dark:text-ink-dark'
                 }`}
               >
                 Tüm etiketler
@@ -115,18 +115,18 @@ const FilterBar = ({
                     onClick={() => {
                       onTagToggle(tag.value)
                     }}
-                    className={`flex w-full items-center justify-between gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                    className={`hover:bg-ink/5 dark:hover:bg-ink-dark/10 flex w-full items-center justify-between gap-3 px-4 py-2 text-left font-mono text-xs tracking-wide ${
                       active
                         ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400'
-                        : 'text-gray-700 dark:text-gray-300'
+                        : 'text-ink dark:text-ink-dark'
                     }`}
                   >
                     <span className="flex items-center gap-2">
                       <span
-                        className={`flex h-4 w-4 items-center justify-center rounded border text-[10px] ${
+                        className={`flex h-4 w-4 items-center justify-center border text-[10px] ${
                           active
                             ? 'border-primary-500 bg-primary-500 text-white'
-                            : 'border-gray-300 text-transparent dark:border-gray-600'
+                            : 'border-ink/40 dark:border-ink-dark/40 text-transparent'
                         }`}
                       >
                         ✓
@@ -144,7 +144,7 @@ const FilterBar = ({
         <select
           value={sortBy}
           onChange={(e) => onSortChange(e.target.value as 'date-desc' | 'date-asc' | 'title')}
-          className="focus:border-primary-500 focus:ring-primary-500 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 focus:ring-1 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
+          className="border-ink/40 text-ink focus:border-primary-500 focus:ring-primary-500 dark:border-ink-dark/40 dark:bg-paper-dark dark:text-ink-dark rounded-none border bg-transparent px-4 py-2.5 font-mono text-xs tracking-wide focus:ring-1"
         >
           <option value="date-desc">En yeni</option>
           <option value="date-asc">En eski</option>
@@ -154,7 +154,7 @@ const FilterBar = ({
         {hasFilters && (
           <button
             onClick={onClear}
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-sm"
+            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-mono text-xs tracking-wide"
           >
             ✕ Temizle
           </button>
@@ -167,7 +167,7 @@ const FilterBar = ({
             <button
               key={selectedTags[index]}
               onClick={() => onTagToggle(selectedTags[index])}
-              className="bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
+              className="border-ink/40 bg-primary-50 text-primary-700 dark:border-ink-dark/40 dark:bg-primary-900/20 dark:text-primary-300 inline-flex items-center border px-3 py-1 font-mono text-xs tracking-wide"
             >
               {label}
               <span className="ml-2 text-[10px]">✕</span>

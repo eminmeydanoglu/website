@@ -103,3 +103,38 @@ Copy `.env.example` to `.env.local`. Optional integrations:
 - Images referenced in posts go to `public/static/images/`
 - Contentlayer auto-generates types at build time
 - Use `contentlayer.config.ts` to modify content schema
+
+## Editorial Pastel Design System (2026-08 redesign)
+
+Works in Progress-inspired redesign. Read `design-drafts/DESIGN.md` (tokens,
+roles, Do/Don'ts) and `docs/EDITORIAL_REDESIGN_BRIEF.md` (owner requirements)
+before touching visual code.
+
+- **Theme:** `css/tailwind.css` `@theme` — paper/ink tokens, sage `primary`,
+  5 curated panel pastels (`--color-tint-*`). Fonts: Playfair (display),
+  Newsreader (prose), IBM Plex Mono (meta/nav), Inter (UI), all latin-ext.
+- **Homepage:** writings-first — no author hero. Aligned grid in
+  `components/GalleryGrid.tsx` (dense flow, every 5th card spans 2 cols,
+  rows share top edges — no stagger; owner rejected the scattered look),
+  cards are `components/EditorialCard.tsx` (artwork +
+  tinted overlapping panel). About/CV moved to `app/about/` behind the
+  header avatar.
+- **Panel tints:** `lib/post-tints.ts` reads `data/post-tints.json`
+  (slug → pastel hex), falling back to a slug hash. Never use raw-extracted
+  colors — always snap to the curated set.
+- **Cover art:** AI-generated classical-oil-painting covers live in
+  `public/static/images/generated/<slug>.png`, referenced from each post's
+  `thumbnail` frontmatter. Pipeline: `scripts/generate-covers.sh` (codex
+  imagegen, one prompt per post) → `scripts/extract-tints.mjs` (dominant hue
+  → nearest pastel, capped at 2 uses per tint). New posts need both.
+- **OG images:** `scripts/generate-og-images.mjs` (runs at the start of
+  `yarn build`) renders per-post social cards to `public/static/og/<slug>.png`
+  — paper background, cover art in a full-height right column, Playfair
+  title, Plex Mono meta, tint chip from `data/post-tints.json`. Brand fonts
+  are checked into `scripts/fonts/` (OFL) and wired into sharp/libvips via
+  a generated fontconfig file (SVG @font-face embedding does NOT work with
+  the vendored librsvg — don't try). New posts just need a `thumbnail`.
+- **26 design skills** live in `.agents/skills/` (project scope) — use the
+  critique-* and ui-design skills when iterating on visuals.
+- Reference/baseline screenshots: `ref-*.jpeg`, `baseline-*.jpeg`,
+  `redesign-v*.jpeg` in repo root.

@@ -11,31 +11,35 @@ export default async function Page() {
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
   return (
-    <>
-      <div className="flex flex-col items-start justify-start divide-y divide-gray-200 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0 dark:divide-gray-700">
-        <div className="space-x-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:border-r-2 md:px-6 md:text-6xl md:leading-14 dark:text-gray-100">
-            Tags
-          </h1>
-        </div>
-        <div className="flex max-w-lg flex-wrap">
-          {tagKeys.length === 0 && 'No tags found.'}
+    <div className="pt-2">
+      <div className="pb-6">
+        <h1 className="text-ink/70 dark:text-ink-dark/70 font-mono text-sm tracking-[0.25em] uppercase">
+          Tags
+        </h1>
+      </div>
+      <div className="border-ink/80 dark:border-ink-dark/30 border-t py-10">
+        {tagKeys.length === 0 && (
+          <p className="text-ink/50 dark:text-ink-dark/50 font-mono text-xs tracking-widest uppercase">
+            No tags found.
+          </p>
+        )}
+        <ul className="flex max-w-2xl flex-wrap gap-x-8 gap-y-4">
           {sortedTags.map((t) => {
             return (
-              <div key={t} className="mt-2 mr-5 mb-2">
+              <li key={t} className="flex items-baseline gap-1">
                 <Tag text={t} />
                 <Link
                   href={`/tags/${slug(t)}`}
-                  className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"
+                  className="text-ink/50 dark:text-ink-dark/50 font-mono text-xs"
                   aria-label={`View posts tagged ${t}`}
                 >
-                  {` (${tagCounts[t]})`}
+                  {`(${tagCounts[t]})`}
                 </Link>
-              </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
       </div>
-    </>
+    </div>
   )
 }

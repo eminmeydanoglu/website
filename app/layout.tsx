@@ -2,7 +2,7 @@ import 'css/tailwind.css'
 import 'pliny/search/algolia.css'
 import 'remark-github-blockquote-alert/alert.css'
 
-import { Inter, IBM_Plex_Mono } from 'next/font/google'
+import { Inter, IBM_Plex_Mono, Playfair_Display, Newsreader } from 'next/font/google'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
 import Header from '@/components/Header'
@@ -14,16 +14,31 @@ import { LanguageProvider } from '@/lib/LanguageContext'
 import { Metadata } from 'next'
 
 const inter = Inter({
-  subsets: ['latin'],
+  subsets: ['latin', 'latin-ext'],
   display: 'swap',
   variable: '--font-inter',
 })
 
 const ibm_plex_mono = IBM_Plex_Mono({
-  subsets: ['latin'],
+  subsets: ['latin', 'latin-ext'],
   display: 'swap',
   variable: '--font-ibm-plex-mono',
   weight: ['400', '700'], // Include weights needed for headers/captions
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+  variable: '--font-playfair',
+  weight: ['500', '700', '800'],
+})
+
+const newsreader = Newsreader({
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+  variable: '--font-newsreader',
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
 })
 
 export const metadata: Metadata = {
@@ -72,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang={siteMetadata.language}
-      className={`${inter.variable} ${ibm_plex_mono.variable} scroll-smooth`}
+      className={`${inter.variable} ${ibm_plex_mono.variable} ${playfair.variable} ${newsreader.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <link
@@ -102,14 +117,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
       <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
-      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
+      <body className="bg-paper text-ink dark:bg-paper-dark dark:text-ink-dark pl-[calc(100vw-100%)] antialiased">
         <ThemeProviders>
           <LanguageProvider>
             <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
             <SectionContainer>
               <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
                 <Header />
-                <main className="mb-auto">{children}</main>
+                <main className="editorial-page-enter mb-auto">{children}</main>
               </SearchProvider>
               <Footer />
             </SectionContainer>
